@@ -77,8 +77,9 @@ def extract_text_from_url(url):
         else:
             return extract_general_webpage(url)
     except Exception as e:
-        print(f"Error extracting content from URL: {e}")
-        return None
+        error_msg = f"Error extracting content from URL: {e}"
+        print(error_msg)
+        raise Exception(error_msg)
 
 def extract_general_webpage(url):
     """Extract text from general web pages."""
@@ -136,21 +137,32 @@ def extract_youtube_transcript(url):
             video_id = url.split('/')[-1].split('?')[0]
         else:
             parsed_url = urlparse(url)
+            if 'v' not in parse_qs(parsed_url.query):
+                raise ValueError("Invalid YouTube URL: missing video ID")
             video_id = parse_qs(parsed_url.query)['v'][0]
+        
+        print(f"Attempting to extract transcript for video ID: {video_id}")
         
         # Get transcript
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
         
         # Combine transcript text
         text = ' '.join([entry['text'] for entry in transcript])
+        print(f"Successfully extracted {len(text)} characters from YouTube transcript")
         return text
         
-    except ImportError:
-        print("youtube-transcript-api not installed. Install with: pip install youtube-transcript-api")
-        return None
+    except ImportError as e:
+        error_msg = "youtube-transcript-api not installed. Install with: pip install youtube-transcript-api"
+        print(error_msg)
+        raise Exception(error_msg)
+    except ValueError as e:
+        error_msg = f"Invalid YouTube URL format: {e}"
+        print(error_msg)
+        raise Exception(error_msg)
     except Exception as e:
-        print(f"Error extracting YouTube transcript: {e}")
-        return None
+        error_msg = f"Error extracting YouTube transcript: {e}. This could be due to: 1) Video has no transcript available, 2) Video is private/restricted, 3) Invalid video ID"
+        print(error_msg)
+        raise Exception(error_msg)
 
 def generate_flashcards(text_content):
     """Generate flashcards from text using Claude AI."""

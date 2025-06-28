@@ -8,7 +8,7 @@ import json
 import os
 import uuid
 import random
-from main import extract_text_from_pdf, generate_flashcards, check_answer, generate_hint
+from main import extract_text_from_pdf, generate_flashcards, check_answer, generate_hint, extract_text_from_url
 from typing import Optional
 
 app = FastAPI()
@@ -126,8 +126,6 @@ async def upload_file(file: UploadFile = File(...)):
 async def generate_flashcards_from_url(request: URLRequest):
     """API endpoint to generate flashcards from a URL."""
     try:
-        from main import extract_text_from_url
-        
         print(f"Processing URL: {request.url}")
         text = extract_text_from_url(request.url)
         if not text:
