@@ -101,6 +101,183 @@
             padding: 0 10px;
         }
 
+        /* Mobile Tab Navigation */
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            background: transparent;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Enhanced Study Session UI */
+        .study-session {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+        }
+
+        .study-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            height: 8px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: white;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+
+        .btn-hint {
+            background: #fbb6ce;
+            color: #97266d;
+        }
+
+        .btn-hint:hover {
+            background: #f687b3;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
         h2 {
             color: #4a5568;
             margin-bottom: 20px;
@@ -552,6 +729,29 @@
                 margin-bottom: 15px;
             }
 
+            .tab-btn {
+                font-size: 12px;
+                padding: 10px 6px;
+            }
+            
+            .question-card {
+                padding: 20px;
+                min-height: 180px;
+            }
+            
+            .question-text {
+                font-size: 16px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                min-width: 100%;
+                margin-bottom: 8px;
+            }
+
             .upload-area {
                 padding: 20px 10px;
             }
@@ -571,6 +771,68 @@
             .tab-button {
                 padding: 10px 6px;
                 font-size: 13px;
+            }
+
+            .flashcard {
+                height: 200px;
+                max-width: 100%;
+            }
+
+            .flashcard-front,
+            .flashcard-back {
+                padding: 15px;
+            }
+
+            .card-content {
+                font-size: 14px;
+                max-height: 140px;
+            }
+
+            .card-type {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+
+            .nav-btn {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+
+            #cardCounter {
+                font-size: 13px;
+            }
+
+            .answer-input {
+                padding: 10px;
+                font-size: 16px;
+                min-height: 60px;
+            }
+
+            .url-input-row {
+                flex-direction: column;
+            }
+
+            .url-examples {
+                font-size: 12px;
+            }
+
+            .study-input-row {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .flashcard-controls {
+                gap: 5px;
+            }
+
+            .study-controls {
+                gap: 5px;
+            }
+            
+            .progress-info {
+                font-size: 14px;
+            }
+        }
             }
 
             .flashcard {
@@ -654,6 +916,20 @@
                 font-size: 1.2em;
                 margin-bottom: 12px;
             }
+            
+            .tab-btn {
+                font-size: 11px;
+                padding: 8px 4px;
+            }
+            
+            .question-card {
+                padding: 16px;
+                min-height: 160px;
+            }
+            
+            .question-text {
+                font-size: 15px;
+            }
 
             .flashcard {
                 height: 180px;
@@ -671,7 +947,6 @@
 
             .flashcard-navigation {
                 padding: 0 5px;
-                gap: 5px;
             }
 
             .nav-btn {
@@ -711,66 +986,121 @@
 </head>
 <body>
     <div class="container">
-        <h1>🧠 Flashcard Study App</h1>
+        <h1>🧠 Quizium</h1>
         
-        <!-- Upload Section -->
-        <div id="uploadSection" class="card">
-            <h2>📚 Upload Your Study Material</h2>
-            <div class="upload-area" id="uploadArea">
-                <p style="margin-bottom: 15px; font-size: 1.1em;">📄 Drag and drop your file here, or click to browse</p>
-                <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Supported: PDF (generate flashcards) or JSON (existing flashcards)</p>
-                <input type="file" id="fileInput" class="file-input" accept=".pdf,.json">
-                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
-                    Choose File
-                </button>
+        <!-- Mobile Tab Navigation -->
+        <div class="tab-container">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="showTab('upload')">📚 Upload</button>
+                <button class="tab-btn" onclick="showTab('study')">🎯 Study</button>
+                <button class="tab-btn" onclick="showTab('browse')">📖 Browse</button>
             </div>
-            <div id="uploadResult" class="hidden"></div>
         </div>
 
-        <!-- URL Input Section -->
-        <div id="urlSection" class="card">
-            <h2>🌐 Generate from Web Content</h2>
-            <div class="url-input-container">
-                <p style="margin-bottom: 15px; font-size: 1.1em; text-align: center;">
-                    📖 Enter a URL to generate flashcards from web content
-                </p>
-                <p style="color: #666; margin-bottom: 15px; text-align: center; font-size: 14px;">
-                    Supported: Wikipedia articles, web articles, blog posts
-                </p>
-                <div class="url-input-row">
-                    <input type="url" id="urlInput" placeholder="https://en.wikipedia.org/wiki/Machine_Learning" 
-                           style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;">
-                    <button class="upload-btn" onclick="processURL()" id="urlBtn">
-                        🚀 Generate
+        <!-- Upload Tab -->
+        <div id="uploadTab" class="tab-content active">
+            <!-- File Upload Section -->
+            <div class="card">
+                <h2>� Upload Study Material</h2>
+                <div class="upload-area" id="uploadArea">
+                    <p style="margin-bottom: 15px; font-size: 1.1em;">📄 Drag and drop your file here, or click to browse</p>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Supported: PDF (generate flashcards) or JSON (existing flashcards)</p>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf,.json">
+                    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                        Choose File
                     </button>
                 </div>
-                <div class="url-examples">
-                    <strong>Examples:</strong><br>
-                    • https://en.wikipedia.org/wiki/Artificial_Intelligence<br>
-                    • Any article or blog post URL
+                <div id="uploadResult" class="hidden"></div>
+            </div>
+
+            <!-- URL Input Section -->
+            <div class="card">
+                <h2>🌐 Generate from Web Content</h2>
+                <div class="url-input-container">
+                    <p style="margin-bottom: 15px; font-size: 1.1em; text-align: center;">
+                        📖 Enter a URL to generate flashcards from web content
+                    </p>
+                    <p style="color: #666; margin-bottom: 15px; text-align: center; font-size: 14px;">
+                        Supported: Wikipedia articles, web articles, blog posts
+                    </p>
+                    <div class="url-input-row">
+                        <input type="url" id="urlInput" placeholder="https://en.wikipedia.org/wiki/Machine_Learning" 
+                               style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;">
+                        <button class="upload-btn" onclick="processURL()" id="urlBtn">
+                            🚀 Generate
+                        </button>
+                    </div>
+                    <div class="url-examples">
+                        <strong>Examples:</strong><br>
+                        • https://en.wikipedia.org/wiki/Artificial_Intelligence<br>
+                        • Any article or blog post URL
+                    </div>
+                </div>
+                <div id="urlResult" class="hidden"></div>
+            </div>
+        </div>
+
+        <!-- Study Tab -->
+        <div id="studyTab" class="tab-content">
+            <!-- Setup Section -->
+            <div id="setupSection" class="card">
+                <h2>⚙️ Study Setup</h2>
+                <div id="flashcardInfo"></div>
+                <div style="text-align: center; margin: 20px 0;">
+                    <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
+                    <input type="number" id="numQuestions" min="1" value="10" 
+                           style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
+                </div>
+                <div style="text-align: center;">
+                    <button class="btn" onclick="startStudySession()">🎯 Start Study Session</button>
                 </div>
             </div>
-            <div id="urlResult" class="hidden"></div>
+
+            <!-- Study Session Section -->
+            <div id="studySessionSection" class="study-session hidden">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="color: white; margin-bottom: 10px;">🎯 Study Session</h2>
+                    <div class="progress-info" style="color: rgba(255,255,255,0.9); font-size: 16px;">
+                        Question <span id="currentQuestionNum">1</span> of <span id="totalQuestions">10</span>
+                    </div>
+                    <div class="study-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 10%"></div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-text" id="currentQuestion">Loading question...</div>
+                    <input type="text" id="answerInput" class="answer-input" placeholder="Type your answer here..." autocomplete="off">
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary" onclick="submitAnswer()">Submit Answer</button>
+                        <button class="action-btn btn-hint" onclick="getHint()">� Hint</button>
+                        <button class="action-btn btn-secondary" onclick="skipQuestion()">Skip</button>
+                    </div>
+                </div>
+
+                <div id="answerFeedback" class="hidden"></div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="action-btn btn-secondary" onclick="endStudySession()">End Session</button>
+                </div>
+            </div>
+
+            <!-- Study Results Section -->
+            <div id="studyResultsSection" class="card hidden">
+                <h2>📊 Study Results</h2>
+                <div id="studyResults"></div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="startNewStudySession()">🔄 Start New Session</button>
+                    <button class="btn" onclick="showTab('browse')">📖 Browse Flashcards</button>
+                </div>
+            </div>
         </div>
 
-        <!-- Setup Section -->
-        <div id="setupSection" class="card hidden">
-            <h2>⚙️ Study Setup</h2>
-            <div id="flashcardInfo"></div>
-            <div style="text-align: center; margin: 20px 0;">
-                <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
-                <input type="number" id="numQuestions" min="1" value="10" 
-                       style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
-            </div>
-            <div style="text-align: center;">
-                <button class="btn" onclick="showFlashcardsView()">📚 View Flashcards</button>
-                <button class="btn" onclick="startStudySession()">🎯 Start Study Session</button>
-            </div>
-        </div>
-
-        <!-- Flashcards View Section -->
-        <div id="flashcardsViewSection" class="card hidden">
-            <h2>📚 Your Flashcards</h2>
+        <!-- Browse Tab -->
+        <div id="browseTab" class="tab-content">
+            <!-- Flashcards View Section -->
+            <div id="flashcardsViewSection" class="card">
+                <h2>📚 Your Flashcards</h2>
             
             <!-- Tab Navigation -->
             <div class="tab-container">
@@ -875,6 +1205,7 @@
             <div id="nextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
                 <button class="btn" onclick="nextQuestion()">➡️ Next Question</button>
             </div>
+            </div>
         </div>
 
         <!-- Final Results Section -->
@@ -892,7 +1223,10 @@
                 <p style="margin-top: 15px;">Processing your file...</p>
             </div>
         </div>
-    </div>
+        
+        </div> <!-- Close browse tab -->
+        
+    </div> <!-- Close container -->
 
     <script>
         let currentSessionId = null;
@@ -1078,22 +1412,25 @@
         });
 
         function showSetupSection(flashcardCount) {
-            // Store flashcards data and go directly to flashcards view
+            // Store flashcards data and switch to study tab
             const flashcardInfo = document.getElementById('flashcardInfo');
             flashcardInfo.innerHTML = `
-                <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
-                    📊 <strong>${flashcardCount}</strong> flashcards loaded successfully!
-                </p>
+                <div style="text-align: center; padding: 15px; background: #f0f8ff; border-radius: 8px; margin-bottom: 20px;">
+                    <span style="font-size: 18px;">✅</span>
+                    <strong>Ready to study!</strong><br>
+                    <span style="color: #666;">${flashcardCount} flashcards loaded</span>
+                </div>
             `;
             
             // Update the study input max values
             document.getElementById('numQuestions').max = flashcardCount;
             document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
-            document.getElementById('studyNumQuestions').max = flashcardCount;
-            document.getElementById('studyNumQuestions').value = Math.min(10, flashcardCount);
             
-            // Go directly to flashcards view
-            showFlashcardsView();
+            // Switch to study tab and show setup
+            showTab('study');
+            document.getElementById('setupSection').classList.remove('hidden');
+            document.getElementById('studySessionSection').classList.add('hidden');
+            document.getElementById('studyResultsSection').classList.add('hidden');
         }
 
         async function startStudySession() {
@@ -2042,6 +2379,101 @@
                 installBtn.remove();
             }
         });
+
+        // Tab Navigation Functions
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Auto-switch to study tab if setup is complete
+            if (tabName === 'study' && currentFlashcards.length === 0) {
+                showTab('upload');
+                showMessage('Please upload study material first!', 'error');
+                return;
+            }
+        }
+
+        // Enhanced Study Session Functions
+        function startStudySession() {
+            if (!currentFlashcards || currentFlashcards.length === 0) {
+                showMessage('Please upload study material first!', 'error');
+                return;
+            }
+
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            if (numQuestions <= 0 || numQuestions > currentFlashcards.length) {
+                showMessage(`Please enter a number between 1 and ${currentFlashcards.length}`, 'error');
+                return;
+            }
+
+            // Start session with improved UI
+            document.getElementById('setupSection').classList.add('hidden');
+            document.getElementById('studySessionSection').classList.remove('hidden');
+            document.getElementById('totalQuestions').textContent = numQuestions;
+            
+            // Initialize session
+            fetch('/start_session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    num_questions: numQuestions
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentStudySessionId = data.study_session_id;
+                    currentQuestionIndex = 0;
+                    correctAnswers = 0;
+                    loadNextQuestion();
+                } else {
+                    showMessage('Failed to start study session: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Error starting study session', 'error');
+            });
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / parseInt(document.getElementById('totalQuestions').textContent)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
+        }
+
+        function startNewStudySession() {
+            document.getElementById('studyResultsSection').classList.add('hidden');
+            document.getElementById('setupSection').classList.remove('hidden');
+            currentStudySessionId = null;
+        }
+
+        function endStudySession() {
+            if (confirm('Are you sure you want to end this study session?')) {
+                document.getElementById('studySessionSection').classList.add('hidden');
+                document.getElementById('setupSection').classList.remove('hidden');
+            }
+        }
     </script>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Created with ❤️ by <a href="#" target="_blank">Isaac Mineo</a> © 2025</p>
+        <p>Quizium - AI-Powered Study Assistant</p>
+    </div>
 </body>
 </html>
