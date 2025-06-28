@@ -50,12 +50,20 @@ class AnswerRequest(BaseModel):
 class HintRequest(BaseModel):
     study_session_id: str
 
+class URLRequest(BaseModel):
+    url: str
+
 def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Render"""
+    return {"status": "healthy", "message": "Flashcard API is running"}
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
@@ -106,6 +114,38 @@ async def upload_file(file: UploadFile = File(...)):
         # Clean up uploaded file
         if os.path.exists(file_path):
             os.remove(file_path)
+
+@app.post("/generate-from-url")
+async def generate_flashcards_from_url(request: URLRequest):
+    """API endpoint to generate flashcards from a URL."""
+    try:
+        from main import extract_text_from_url
+        
+        print(f"Processing URL: {request.url}")
+        text = extract_text_from_url(request.url)
+        if not text:
+            raise HTTPException(status_code=400, detail="Failed to extract content from URL")
+        
+        print(f"Extracted {len(text)} characters from URL")
+        flashcards = generate_flashcards(text)
+        if not flashcards:
+            raise HTTPException(status_code=500, detail="Failed to generate flashcards")
+        
+        # Store flashcards in session for studying
+        session_id = str(uuid.uuid4())
+        sessions[session_id] = {
+            'flashcards': flashcards.get('flashcards', []),
+            'study_session': None
+        }
+        
+        return {
+            "session_id": session_id,
+            "flashcards": flashcards.get('flashcards', []),
+            "message": f"Generated {len(flashcards.get('flashcards', []))} flashcards from URL"
+        }
+    except Exception as e:
+        print(f"Error processing URL: {e}")
+        raise HTTPException(status_code=500, detail=f"Error processing URL: {str(e)}")
 
 @app.post("/start_session")
 async def start_session(request: StartSessionRequest):

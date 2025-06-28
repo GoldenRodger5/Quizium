@@ -580,4 +580,5 @@ async def generate_flashcards_from_url(request: URLRequest):
         raise HTTPException(status_code=500, detail=f"Error processing URL: {str(e)}")
 
 if __name__ == "__main__":
+    # CLI mode only - web server uses app.py
     main()
