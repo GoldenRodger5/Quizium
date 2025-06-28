@@ -1,109 +1,144 @@
 {
   "flashcards": [
     {
-      "category": "canine basics",
+      "category": "ai principles",
       "difficulty": "easy",
       "type": "question_answer",
-      "question": "What are dogs?",
-      "answer": "Domesticated mammals that live all over the world and are taken care of by people."
+      "question": "What is supervised learning?",
+      "answer": "A machine learning approach where models are trained on labeled data that includes both input and correct output, similar to teaching a child with flashcards."
     },
     {
-      "category": "canine history",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Dogs in domestication history",
-      "content": "Most historians believe dogs were the first animals to be domesticated."
-    },
-    {
-      "category": "canine popularity",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Dog ownership in the US",
-      "content": "In the United States alone, almost 43 million households own at least one dog."
-    },
-    {
-      "category": "dog breeds",
+      "category": "ai principles",
       "difficulty": "easy",
-      "type": "fact",
-      "prompt": "Number of dog types",
-      "content": "There are over 150 types of dogs."
+      "type": "question_answer",
+      "question": "What is unsupervised learning?",
+      "answer": "A machine learning approach that uses unlabeled data to discover hidden structures and patterns without predefined values, similar to organizing mixed toys into groups based on similarities."
     },
     {
-      "category": "dog breeds",
+      "category": "ai principles",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "How tall can Great Danes get and how much can they weigh?",
-      "answer": "Great Danes can get up to 30 inches tall and weigh almost 200 pounds."
+      "question": "What is the difference between classification and regression in supervised learning?",
+      "answer": "Classification predicts categorical variables with discrete outputs falling into specific categories, while regression predicts numerical values or continuous quantities based on input features."
     },
     {
-      "category": "dog breeds",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Great Danes",
-      "definition": "Large dogs nicknamed 'gentle giants' that can reach 30 inches tall and weigh almost 200 pounds."
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Chihuahua",
-      "definition": "Small dogs usually between 6-9 inches tall with big personalities."
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Dalmatian puppies",
-      "content": "Dalmatians are born white, but their black spots appear when they are about four weeks old."
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Dalmatian",
-      "definition": "Dogs famous for their white coat and black spots."
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Pug",
-      "definition": "Small dogs with wrinkly faces that are sweet, gentle, and great around kids."
-    },
-    {
-      "category": "canine senses",
+      "category": "ai principles",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "How do dogs see colors compared to humans?",
-      "answer": "Dogs see colors as yellows, browns, and blues, while humans see a fuller spectrum including reds and greens."
+      "question": "What are the steps in regression modeling?",
+      "answer": "1. Data collection 2. Data processing (cleaning, handling missing values, normalization) 3. Model training 4. Model evaluation 5. Prediction"
     },
     {
-      "category": "canine senses",
-      "difficulty": "hard",
-      "type": "fact",
-      "prompt": "Dog's sense of smell",
-      "content": "Dogs have more smell receptors in their noses than humans, and the part of their brain that processes smells is larger."
-    },
-    {
-      "category": "canine development",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Puppies",
-      "definition": "Baby dogs, considered puppies until they are one year old."
-    },
-    {
-      "category": "canine development",
+      "category": "ai principles",
       "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Newborn puppies",
-      "content": "Puppies are born blind, deaf, and without teeth."
+      "type": "question_answer",
+      "question": "What are three common techniques used in unsupervised learning?",
+      "answer": "Clustering (K-means), dimensionality reduction (PCA), and anomaly detection (isolation forest)"
     },
     {
-      "category": "canine physiology",
+      "category": "ai principles",
       "difficulty": "hard",
       "type": "question_answer",
-      "question": "How do dogs sweat and cool down?",
-      "answer": "Dogs only sweat from their paws. Their main way of cooling down is by panting."
+      "question": "How does K-means clustering work in a real-world retail scenario?",
+      "answer": "It groups customers into segments based on purchasing behavior and similarities, allowing retailers to create targeted marketing campaigns for different customer groups like high spenders, budget shoppers, or occasional buyers."
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Classification",
+      "definition": "A supervised learning technique that predicts categorical variables, where outputs fall into specific categories (e.g., spam/not spam, fraud/legitimate)"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Regression",
+      "definition": "A supervised learning technique that predicts numerical values based on input features (e.g., house prices, stock prices)"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "K-means Clustering",
+      "definition": "An unsupervised learning algorithm that groups unlabeled data into K clusters based on feature similarities"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Principal Component Analysis (PCA)",
+      "definition": "A dimensionality reduction algorithm that simplifies datasets with many features while retaining important information"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Isolation Forest",
+      "definition": "An anomaly detection algorithm that identifies unusual patterns or behaviors that significantly deviate from standard patterns"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "hard",
+      "type": "vocabulary",
+      "term": "Random Cut Forest",
+      "definition": "Amazon's proprietary algorithm for anomaly detection"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "easy",
+      "type": "fact",
+      "prompt": "Benefits of unsupervised learning",
+      "content": "1. Discovering hidden patterns in stored data 2. Finding structure in data without predefined labels 3. Ideal for data exploration and exploratory data analysis"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Use cases for classification",
+      "content": "1. Identifying spam emails 2. Predicting breast cancer 3. Detecting fraudulent credit card transactions 4. Predicting loan application approval 5. Classifying medical images"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Use cases for regression",
+      "content": "1. Predicting house prices based on features like size, location, bedrooms 2. Predicting future stock prices based on historical data 3. Predicting email length or reading time"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "hard",
+      "type": "fact",
+      "prompt": "Model evaluation metrics for regression",
+      "content": "Mean squared error (MSE) and R-squared (R²) are used to assess the difference between predicted and actual values"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is the purpose of dimensionality reduction?",
+      "answer": "To simplify datasets with many features, making them easier to visualize and analyze while retaining the most important information"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "How does anomaly detection work in a financial fraud detection scenario?",
+      "answer": "It identifies transactions that deviate significantly from normal patterns (unusual locations, times, amounts) and flags them as potentially fraudulent for further investigation"
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "easy",
+      "type": "fact",
+      "prompt": "How to identify if a use case requires classification or regression",
+      "content": "If predicting a category (spam/not spam), use classification. If predicting a quantity or real value (price), use regression."
+    },
+    {
+      "category": "ai principles",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Example of dimensionality reduction application",
+      "content": "Reducing storage of high-resolution images or videos without losing significant visual quality by compressing them using PCA"
     }
   ]
 }

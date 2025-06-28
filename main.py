@@ -143,8 +143,30 @@ def extract_youtube_transcript(url):
         
         print(f"Attempting to extract transcript for video ID: {video_id}")
         
-        # Get transcript
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        # Try to get transcript with different language options
+        try:
+            # First try default (usually auto-generated English)
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        except Exception as e:
+            print(f"Default transcript failed: {e}")
+            # Try to get list of available transcripts
+            try:
+                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+                available_langs = []
+                
+                # Try to get any available transcript
+                for transcript_obj in transcript_list:
+                    available_langs.append(transcript_obj.language_code)
+                    try:
+                        transcript = transcript_obj.fetch()
+                        print(f"Successfully got transcript in language: {transcript_obj.language_code}")
+                        break
+                    except:
+                        continue
+                else:
+                    raise Exception(f"No accessible transcripts found. Available languages: {available_langs}")
+            except Exception as e2:
+                raise Exception(f"Could not access any transcripts: {e2}")
         
         # Combine transcript text
         text = ' '.join([entry['text'] for entry in transcript])
@@ -160,7 +182,7 @@ def extract_youtube_transcript(url):
         print(error_msg)
         raise Exception(error_msg)
     except Exception as e:
-        error_msg = f"Error extracting YouTube transcript: {e}. This could be due to: 1) Video has no transcript available, 2) Video is private/restricted, 3) Invalid video ID"
+        error_msg = f"Error extracting YouTube transcript: {e}. This could be due to: 1) Video has no transcript available, 2) Video is private/restricted, 3) Invalid video ID, 4) Geographic restrictions, 5) Server environment limitations"
         print(error_msg)
         raise Exception(error_msg)
 
