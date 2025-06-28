@@ -22,8 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Templates
+# Templates and Static Files
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
@@ -67,6 +68,20 @@ async def index(request: Request):
 async def health_check():
     """Health check endpoint for Render"""
     return {"status": "healthy", "message": "Flashcard API is running"}
+
+@app.get("/manifest.json")
+async def get_manifest():
+    """Serve PWA manifest file"""
+    with open("static/manifest.json", "r") as f:
+        manifest = json.load(f)
+    return manifest
+
+@app.get("/sw.js")
+async def get_service_worker():
+    """Serve service worker file"""
+    with open("static/sw.js", "r") as f:
+        sw_content = f.read()
+    return HTMLResponse(content=sw_content, media_type="application/javascript")
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
