@@ -15,6 +15,12 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 import re
+try:
+    from docx import Document
+    DOCX_AVAILABLE = True
+except ImportError:
+    DOCX_AVAILABLE = False
+    print("⚠️ python-docx not installed. DOC/DOCX support disabled. Install with: pip install python-docx")
 
 # Load environment variables from .env file
 load_dotenv()
@@ -525,11 +531,13 @@ def main():
     """Main function to process PDF/URL and generate flashcards."""
     if len(sys.argv) < 2:
         print("Usage:")
-        print("  Generate flashcards from PDF: python main.py <path_to_pdf>")
+        print("  Generate flashcards from document: python main.py <path_to_file>")
         print("  Generate flashcards from URL: python main.py <url>")
         print("  Study with chatbot: python main.py study <path_to_flashcard_json>")
+        print("\nSupported document formats: PDF, DOC, DOCX")
         print("\nExamples:")
         print("  python main.py document.pdf")
+        print("  python main.py document.docx")
         print("  python main.py https://en.wikipedia.org/wiki/Machine_Learning")
         print("  python main.py study document_flashcards.json")
         sys.exit(1)
@@ -579,24 +587,24 @@ def main():
             output_path = f"{domain}_flashcards.json"
             
         else:
-            # PDF processing mode (existing functionality)
-            pdf_path = input_source
+            # Document processing mode (PDF, DOC, DOCX)
+            file_path = input_source
             
-            if not Path(pdf_path).exists():
-                print(f"Error: File '{pdf_path}' not found")
+            if not Path(file_path).exists():
+                print(f"Error: File '{file_path}' not found")
                 sys.exit(1)
             
-            print(f"Processing PDF: {pdf_path}")
+            print(f"Processing document: {file_path}")
             
-            print("Extracting text from PDF...")
-            text = extract_text_from_pdf(pdf_path)
+            print("Extracting text from document...")
+            text = extract_text_from_document(file_path)
             
             if not text:
-                print("Failed to extract text from PDF")
+                print("Failed to extract text from document")
                 sys.exit(1)
                 
-            print(f"Extracted {len(text)} characters from PDF")
-            output_path = Path(pdf_path).stem + "_flashcards.json"
+            print(f"Extracted {len(text)} characters from document")
+            output_path = Path(file_path).stem + "_flashcards.json"
         
         # Generate flashcards using Claude (same for both sources)
         print("Generating flashcards with Claude AI...")
@@ -617,6 +625,57 @@ def main():
         
         print(f"\n💡 To study with these flashcards, run:")
         print(f"python main.py study {output_path}")
+
+def extract_text_from_docx(docx_path):
+    """Extract text content from a DOCX file."""
+    if not DOCX_AVAILABLE:
+        raise Exception("python-docx not installed. Install with: pip install python-docx")
+    
+    try:
+        doc = Document(docx_path)
+        text = ""
+        
+        # Extract text from paragraphs
+        for paragraph in doc.paragraphs:
+            text += paragraph.text + "\n"
+        
+        # Extract text from tables
+        for table in doc.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    text += cell.text + " "
+                text += "\n"
+        
+        return text.strip()
+    except Exception as e:
+        print(f"Error reading DOCX: {e}")
+        return None
+
+def extract_text_from_doc(doc_path):
+    """Extract text content from a DOC file using textract."""
+    try:
+        import textract
+        text = textract.process(doc_path).decode('utf-8')
+        return text.strip()
+    except ImportError:
+        raise Exception("textract not installed. Install with: pip install textract")
+    except Exception as e:
+        print(f"Error reading DOC: {e}")
+        return None
+
+def extract_text_from_document(file_path):
+    """Extract text from various document formats."""
+    file_path = Path(file_path)
+    extension = file_path.suffix.lower()
+    
+    if extension == '.pdf':
+        return extract_text_from_pdf(file_path)
+    elif extension == '.docx':
+        return extract_text_from_docx(file_path)
+    elif extension == '.doc':
+        return extract_text_from_doc(file_path)
+    else:
+        raise Exception(f"Unsupported file format: {extension}. Supported formats: PDF, DOC, DOCX")
 
 @app.post("/check-answer")
 async def check_answer_endpoint(question: str, correct_answer: str, user_answer: str):

@@ -8,7 +8,7 @@ import json
 import os
 import uuid
 import random
-from main import extract_text_from_pdf, generate_flashcards, check_answer, generate_hint, extract_text_from_url
+from main import extract_text_from_pdf, extract_text_from_document, generate_flashcards, check_answer, generate_hint, extract_text_from_url
 from typing import Optional
 
 app = FastAPI()
@@ -28,7 +28,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'json'}
+ALLOWED_EXTENSIONS = {'pdf', 'doc', 'docx', 'json'}
 
 # Create uploads directory if it doesn't exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -56,6 +56,9 @@ class URLRequest(BaseModel):
 
 class FlashcardsRequest(BaseModel):
     flashcards: list
+
+class RestartRequest(BaseModel):
+    confirm: bool = True
 
 def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -86,7 +89,7 @@ async def get_service_worker():
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     if not allowed_file(file.filename):
-        raise HTTPException(status_code=400, detail="Invalid file type. Please upload a PDF or JSON file.")
+        raise HTTPException(status_code=400, detail="Invalid file type. Please upload a PDF, DOC, DOCX, or JSON file.")
     
     # Save file temporarily
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -97,11 +100,15 @@ async def upload_file(file: UploadFile = File(...)):
     file_extension = file.filename.rsplit('.', 1)[1].lower()
     
     try:
-        if file_extension == 'pdf':
-            # Process PDF and generate flashcards
-            text = extract_text_from_pdf(file_path)
+        if file_extension in ['pdf', 'doc', 'docx']:
+            # Process document and generate flashcards
+            if file_extension == 'pdf':
+                text = extract_text_from_pdf(file_path)
+            else:
+                text = extract_text_from_document(file_path)
+                
             if not text:
-                raise HTTPException(status_code=400, detail="Failed to extract text from PDF")
+                raise HTTPException(status_code=400, detail=f"Failed to extract text from {file_extension.upper()}")
             
             flashcards_data = generate_flashcards(text)
             if not flashcards_data:
@@ -334,6 +341,92 @@ async def create_session_from_flashcards(request: FlashcardsRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error creating session: {str(e)}")
+
+@app.post("/restart")
+async def restart_app(request: RestartRequest):
+    """Restart the application by clearing all sessions and data."""
+    try:
+        if not request.confirm:
+            raise HTTPException(status_code=400, detail="Restart not confirmed")
+        
+        # Clear all sessions
+        global sessions
+        sessions.clear()
+        
+        # Clear uploads directory
+        import shutil
+        if os.path.exists(UPLOAD_FOLDER):
+            shutil.rmtree(UPLOAD_FOLDER)
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        
+        return {
+            'success': True,
+            'message': 'Application restarted successfully. All data cleared.'
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error restarting application: {str(e)}")
+
+@app.get("/get_filters")
+async def get_filters(session_id: str):
+    """Get available filter options for the current session's flashcards."""
+    try:
+        if session_id not in sessions:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        flashcards = sessions[session_id]['flashcards']
+        
+        # Extract unique values for filters
+        categories = sorted(list(set(card.get('category', 'General') for card in flashcards)))
+        difficulties = sorted(list(set(card.get('difficulty', 'medium') for card in flashcards)))
+        types = sorted(list(set(card.get('type', 'question_answer') for card in flashcards)))
+        
+        return {
+            'categories': categories,
+            'difficulties': difficulties,
+            'types': types,
+            'total_flashcards': len(flashcards)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting filters: {str(e)}")
+
+@app.post("/filter_flashcards")
+async def filter_flashcards(request: dict):
+    """Filter flashcards based on criteria."""
+    try:
+        session_id = request.get('session_id')
+        filters = request.get('filters', {})
+        
+        if session_id not in sessions:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        flashcards = sessions[session_id]['flashcards']
+        filtered_flashcards = []
+        
+        for card in flashcards:
+            # Check category filter
+            if filters.get('category') and filters['category'] != 'all':
+                if card.get('category', 'General') != filters['category']:
+                    continue
+            
+            # Check difficulty filter
+            if filters.get('difficulty') and filters['difficulty'] != 'all':
+                if card.get('difficulty', 'medium') != filters['difficulty']:
+                    continue
+            
+            # Check type filter
+            if filters.get('type') and filters['type'] != 'all':
+                if card.get('type', 'question_answer') != filters['type']:
+                    continue
+            
+            filtered_flashcards.append(card)
+        
+        return {
+            'flashcards': filtered_flashcards,
+            'count': len(filtered_flashcards),
+            'total': len(flashcards)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error filtering flashcards: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

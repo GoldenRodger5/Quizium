@@ -278,6 +278,22 @@
             color: white;
         }
 
+        /* Filter styles */
+        .filter-select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
         h2 {
             color: #4a5568;
             margin-bottom: 20px;
@@ -986,7 +1002,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>🧠 Quizium</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>🧠 Quizium</h1>
+            <button class="btn btn-secondary" onclick="restartApp()" style="background: #e53e3e; color: white;">
+                🔄 Restart App
+            </button>
+        </div>
         
         <!-- Mobile Tab Navigation -->
         <div class="tab-container">
@@ -1004,8 +1025,8 @@
                 <h2>� Upload Study Material</h2>
                 <div class="upload-area" id="uploadArea">
                     <p style="margin-bottom: 15px; font-size: 1.1em;">📄 Drag and drop your file here, or click to browse</p>
-                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Supported: PDF (generate flashcards) or JSON (existing flashcards)</p>
-                    <input type="file" id="fileInput" class="file-input" accept=".pdf,.json">
+                    <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Supported: PDF, DOC, DOCX (generate flashcards) or JSON (existing flashcards)</p>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.json">
                     <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
                         Choose File
                     </button>
@@ -1046,6 +1067,33 @@
             <div id="setupSection" class="card">
                 <h2>⚙️ Study Setup</h2>
                 <div id="flashcardInfo"></div>
+                
+                <!-- Filters Section -->
+                <div id="filtersSection" class="hidden" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="margin-bottom: 15px;">📋 Filter Flashcards</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div>
+                            <label for="categoryFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Category:</label>
+                            <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="difficultyFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Difficulty:</label>
+                            <select id="difficultyFilter" class="filter-select" onchange="applyFilters()">
+                                <option value="all">All Difficulties</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="typeFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Type:</label>
+                            <select id="typeFilter" class="filter-select" onchange="applyFilters()">
+                                <option value="all">All Types</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="filterResults" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+                </div>
+                
                 <div style="text-align: center; margin: 20px 0;">
                     <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
                     <input type="number" id="numQuestions" min="1" value="10" 
@@ -1232,7 +1280,9 @@
         let currentSessionId = null;
         let currentStudySessionId = null;
         let currentQuestionData = null;
-        let currentFlashcards = [];
+        let currentFlashcards = []; // Store original flashcards
+        let filteredFlashcards = []; // Store filtered flashcards
+        let currentFilters = { category: 'all', difficulty: 'all', type: 'all' };
         let showingResult = false;
         let studySessionActive = false;
         let studySessionComplete = false;
@@ -1425,6 +1475,9 @@
             // Update the study input max values
             document.getElementById('numQuestions').max = flashcardCount;
             document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
+            
+            // Load filters
+            loadFilters();
             
             // Switch to study tab and show setup
             showTab('study');
@@ -2408,14 +2461,16 @@
 
         // Enhanced Study Session Functions
         function startStudySession() {
-            if (!currentFlashcards || currentFlashcards.length === 0) {
-                showMessage('Please upload study material first!', 'error');
+            const flashcardsToUse = filteredFlashcards.length > 0 ? filteredFlashcards : currentFlashcards;
+            
+            if (!flashcardsToUse || flashcardsToUse.length === 0) {
+                showMessage('No flashcards available for study!', 'error');
                 return;
             }
 
             const numQuestions = parseInt(document.getElementById('numQuestions').value);
-            if (numQuestions <= 0 || numQuestions > currentFlashcards.length) {
-                showMessage(`Please enter a number between 1 and ${currentFlashcards.length}`, 'error');
+            if (numQuestions <= 0 || numQuestions > flashcardsToUse.length) {
+                showMessage(`Please enter a number between 1 and ${flashcardsToUse.length}`, 'error');
                 return;
             }
 
@@ -2429,7 +2484,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    session_id: sessionId,
+                    session_id: currentSessionId,
                     num_questions: numQuestions
                 })
             })
@@ -2467,6 +2522,130 @@
                 document.getElementById('studySessionSection').classList.add('hidden');
                 document.getElementById('setupSection').classList.remove('hidden');
             }
+        }
+
+        // Restart App Function
+        async function restartApp() {
+            if (confirm('Are you sure you want to restart the app? This will clear all flashcards and study data.')) {
+                try {
+                    const response = await fetch('/restart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ confirm: true })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Reset all UI state
+                        currentFlashcards = [];
+                        filteredFlashcards = [];
+                        currentSessionId = null;
+                        currentStudySessionId = null;
+                        
+                        // Reset UI
+                        showTab('upload');
+                        document.getElementById('setupSection').classList.add('hidden');
+                        document.getElementById('studySessionSection').classList.add('hidden');
+                        document.getElementById('studyResultsSection').classList.add('hidden');
+                        document.getElementById('filtersSection').classList.add('hidden');
+                        
+                        // Clear upload results
+                        document.getElementById('uploadResult').innerHTML = '';
+                        document.getElementById('uploadResult').classList.add('hidden');
+                        document.getElementById('urlResult').innerHTML = '';
+                        document.getElementById('urlResult').classList.add('hidden');
+                        
+                        showMessage('App restarted successfully!', 'success');
+                    } else {
+                        showMessage('Failed to restart app', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error restarting app:', error);
+                    showMessage('Error restarting app', 'error');
+                }
+            }
+        }
+
+        // Filter Functions
+        async function loadFilters() {
+            if (!currentSessionId) return;
+            
+            try {
+                const response = await fetch(`/get_filters?session_id=${currentSessionId}`);
+                const data = await response.json();
+                
+                // Populate filter dropdowns
+                populateFilterDropdown('categoryFilter', data.categories);
+                populateFilterDropdown('difficultyFilter', data.difficulties);
+                populateFilterDropdown('typeFilter', data.types);
+                
+                // Show filters section
+                document.getElementById('filtersSection').classList.remove('hidden');
+                
+                // Initialize with all flashcards
+                filteredFlashcards = [...currentFlashcards];
+                updateFilterResults();
+                
+            } catch (error) {
+                console.error('Error loading filters:', error);
+            }
+        }
+
+        function populateFilterDropdown(selectId, options) {
+            const select = document.getElementById(selectId);
+            // Keep the "All" option and add specific options
+            const currentOptions = Array.from(select.options).slice(1); // Remove existing options except "All"
+            currentOptions.forEach(option => option.remove());
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                select.appendChild(optionElement);
+            });
+        }
+
+        async function applyFilters() {
+            if (!currentSessionId) return;
+            
+            currentFilters = {
+                category: document.getElementById('categoryFilter').value,
+                difficulty: document.getElementById('difficultyFilter').value,
+                type: document.getElementById('typeFilter').value
+            };
+            
+            try {
+                const response = await fetch('/filter_flashcards', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        filters: currentFilters
+                    })
+                });
+                
+                const data = await response.json();
+                filteredFlashcards = data.flashcards;
+                updateFilterResults();
+                
+                // Update the max number of questions
+                const maxQuestions = filteredFlashcards.length;
+                const numQuestionsInput = document.getElementById('numQuestions');
+                numQuestionsInput.max = maxQuestions;
+                numQuestionsInput.value = Math.min(10, maxQuestions);
+                
+            } catch (error) {
+                console.error('Error applying filters:', error);
+                showMessage('Error applying filters', 'error');
+            }
+        }
+
+        function updateFilterResults() {
+            const resultsDiv = document.getElementById('filterResults');
+            const total = currentFlashcards.length;
+            const filtered = filteredFlashcards.length;
+            resultsDiv.textContent = `Showing ${filtered} of ${total} flashcards`;
         }
     </script>
 
