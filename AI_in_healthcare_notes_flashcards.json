@@ -1,0 +1,116 @@
+{
+  "flashcards": [
+    {
+      "category": "ai fundamentals",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What is artificial intelligence?",
+      "answer": "Accumulation of technologies that allow a digital computer to perform tasks associated with human intelligence by learning from iterative processing and algorithmic training."
+    },
+    {
+      "category": "ai fundamentals",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What are the two types of AI?",
+      "answer": "Weak AI and Strong AI"
+    },
+    {
+      "category": "ai fundamentals",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is Weak AI?",
+      "answer": "AI trained to automate specific tasks. Examples include voice assistants like Alexa and Siri that can only complete tasks they are trained to do."
+    },
+    {
+      "category": "ai fundamentals",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is Strong AI?",
+      "answer": "AI able to learn and replicate human thinking. Does not exist yet, but an example would be C3PO."
+    },
+    {
+      "category": "ai systems",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How does an AI system learn?",
+      "answer": "By being fed labeled training data, learning through trial and error, and discovering patterns that can be applied to unlabeled data."
+    },
+    {
+      "category": "ai systems",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What are the three steps in how an AI system works?",
+      "answer": "Learning (acquiring data and creating rules), Reasoning (selecting correct algorithms), and Self-correction (fine-tuning algorithms for accuracy)"
+    },
+    {
+      "category": "ai applications",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What are two examples of AI applications mentioned in the text?",
+      "answer": "Speech-to-text recognition and automated customer service chatbots"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "How many people in the US suffer limb loss from amputation, neurological condition, or infection annually?",
+      "answer": "185,000 people"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How can AI be used in healthcare regarding prosthetics?",
+      "answer": "In the creation of neuroprosthetics to allow for enhanced freedom of movement"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What are two areas where AI can be used in healthcare business operations?",
+      "answer": "Pre-authorizing insurance, following up on unpaid bills, and maintaining records"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "What is the main goal of neural interfacing in neuroprosthetics?",
+      "answer": "To gather data from the brain, analyze it, determine the intention of movement, and instruct the prosthetic to perform a specific movement"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Neuroprosthetics",
+      "definition": "Artificial devices that restore or facilitate sensorimotor, cognitive, auditory or visual functions damaged from injury by bypassing damaged neural circuits"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Neural interfacing",
+      "definition": "Use of electrodes to record brain signals for prosthetic control"
+    },
+    {
+      "category": "ai applications",
+      "difficulty": "easy",
+      "type": "fact",
+      "prompt": "Example of AI in customer service",
+      "content": "Automated chatbots can receive written questions from customers, answer them, and even initiate and process returns"
+    },
+    {
+      "category": "ai systems",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "How AI is trained to recognize images",
+      "content": "AI is fed labeled training data (e.g., pictures of dogs vs. non-dogs), learns through trial and error, and applies discovered patterns to unlabeled data"
+    },
+    {
+      "category": "ai in healthcare",
+      "difficulty": "hard",
+      "type": "fact",
+      "prompt": "Diagnostic capabilities of AI in healthcare",
+      "content": "AI can be used to diagnose patients with little to no healthcare worker intervention"
+    }
+  ]
+}

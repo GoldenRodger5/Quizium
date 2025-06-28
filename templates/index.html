@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Study App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e6fffa;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            margin: 10px;
+        }
+
+        .upload-btn:hover {
+            background: #5a67d8;
+        }
+
+        .btn {
+            background: #48bb78;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #38a169;
+        }
+
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #ed8936;
+        }
+
+        .btn-secondary:hover {
+            background: #dd6b20;
+        }
+
+        .btn-hint {
+            background: #805ad5;
+        }
+
+        .btn-hint:hover {
+            background: #6b46c1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .question-info {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #38b2ac;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #2d3748;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 15px 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .result {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .result.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #68d391;
+        }
+
+        .result.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #4a5568;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #48bb78;
+            transition: width 0.3s ease;
+        }
+
+        .hint {
+            background: #fef5e7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ed8936;
+            color: #744210;
+        }
+
+        .final-score {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Flashcard Study App</h1>
+        
+        <!-- Upload Section -->
+        <div id="uploadSection" class="card">
+            <h2>📚 Upload Your Study Material</h2>
+            <div class="upload-area" id="uploadArea">
+                <p style="margin-bottom: 15px; font-size: 1.1em;">📄 Drag and drop your file here, or click to browse</p>
+                <p style="color: #666; margin-bottom: 20px;">Supported files: PDF (to generate flashcards) or JSON (existing flashcards)</p>
+                <input type="file" id="fileInput" class="file-input" accept=".pdf,.json">
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose File
+                </button>
+            </div>
+            <div id="uploadResult" class="hidden"></div>
+        </div>
+
+        <!-- Setup Section -->
+        <div id="setupSection" class="card hidden">
+            <h2>⚙️ Study Setup</h2>
+            <div id="flashcardInfo"></div>
+            <div style="text-align: center; margin: 20px 0;">
+                <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
+                <input type="number" id="numQuestions" min="1" value="10" 
+                       style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
+            </div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="startStudySession()">🎯 Start Study Session</button>
+            </div>
+        </div>
+
+        <!-- Study Section -->
+        <div id="studySection" class="card hidden">
+            <div id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="score" id="scoreDisplay">Score: 0/0</div>
+            </div>
+            
+            <div id="questionContainer">
+                <div id="questionInfo" class="question-info"></div>
+                <div id="questionText" class="question-text"></div>
+                
+                <div id="answerSection">
+                    <textarea id="answerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
+                    <div style="text-align: center;">
+                        <button class="btn" onclick="submitAnswer()">✅ Submit Answer</button>
+                        <button class="btn btn-hint" onclick="getHint()">💡 Get Hint</button>
+                        <button class="btn btn-secondary" onclick="skipQuestion()">⏭️ Skip</button>
+                    </div>
+                </div>
+                
+                <div id="hintContainer" class="hidden"></div>
+                <div id="resultContainer" class="hidden"></div>
+            </div>
+            
+            <div id="nextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="nextQuestion()">➡️ Next Question</button>
+            </div>
+        </div>
+
+        <!-- Final Results Section -->
+        <div id="resultsSection" class="card hidden">
+            <div id="finalResults"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="startOver()">🔄 Start Over</button>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loadingSection" class="card hidden">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 15px;">Processing your file...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        let currentStudySessionId = null;
+        let currentQuestionData = null;
+        let showingResult = false;
+
+        // File upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        async function handleFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            showSection('loadingSection');
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentSessionId = result.session_id;
+                    showUploadSuccess(result);
+                    showSetupSection(result.flashcard_count);
+                } else {
+                    showUploadError(result.error);
+                }
+            } catch (error) {
+                showUploadError('Failed to upload file: ' + error.message);
+            }
+        }
+
+        function showUploadSuccess(result) {
+            const uploadResult = document.getElementById('uploadResult');
+            uploadResult.innerHTML = `
+                <div class="result correct">
+                    ✅ ${result.message}
+                </div>
+            `;
+            uploadResult.classList.remove('hidden');
+        }
+
+        function showUploadError(error) {
+            showSection('uploadSection');
+            const uploadResult = document.getElementById('uploadResult');
+            uploadResult.innerHTML = `
+                <div class="result incorrect">
+                    ❌ ${error}
+                </div>
+            `;
+            uploadResult.classList.remove('hidden');
+        }
+
+        function showSetupSection(flashcardCount) {
+            const flashcardInfo = document.getElementById('flashcardInfo');
+            flashcardInfo.innerHTML = `
+                <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
+                    📊 <strong>${flashcardCount}</strong> flashcards loaded successfully!
+                </p>
+            `;
+            
+            document.getElementById('numQuestions').max = flashcardCount;
+            document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
+            
+            showSection('setupSection');
+        }
+
+        async function startStudySession() {
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            
+            showSection('loadingSection');
+
+            try {
+                const response = await fetch('/start_session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: currentSessionId,
+                        num_questions: numQuestions
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentStudySessionId = result.study_session_id;
+                    showSection('studySection');
+                    loadNextQuestion();
+                } else {
+                    showUploadError(result.error);
+                }
+            } catch (error) {
+                showUploadError('Failed to start study session: ' + error.message);
+            }
+        }
+
+        async function loadNextQuestion() {
+            try {
+                const response = await fetch('/get_question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (result.complete) {
+                        showFinalResults(result);
+                    } else {
+                        currentQuestionData = result;
+                        displayQuestion(result);
+                        showingResult = false;
+                    }
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Failed to load question: ' + error.message);
+            }
+        }
+
+        function displayQuestion(questionData) {
+            // Update progress
+            const progress = (questionData.question_number - 1) / questionData.total_questions * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('scoreDisplay').textContent = 
+                `Score: ${questionData.current_score}/${questionData.question_number - 1} | Question ${questionData.question_number}/${questionData.total_questions}`;
+
+            // Display question info
+            document.getElementById('questionInfo').innerHTML = `
+                <strong>Category:</strong> ${questionData.category} | 
+                <strong>Difficulty:</strong> ${questionData.difficulty}
+            `;
+
+            // Display question
+            document.getElementById('questionText').textContent = questionData.question;
+
+            // Reset UI
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').disabled = false;
+            document.getElementById('hintContainer').classList.add('hidden');
+            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('answerSection').classList.remove('hidden');
+            document.getElementById('nextQuestionSection').classList.add('hidden');
+        }
+
+        async function submitAnswer() {
+            const answer = document.getElementById('answerInput').value.trim();
+            if (!answer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            if (showingResult) {
+                nextQuestion();
+                return;
+            }
+
+            try {
+                const response = await fetch('/submit_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId,
+                        answer: answer
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showResult(result);
+                    showingResult = true;
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Failed to submit answer: ' + error.message);
+            }
+        }
+
+        function showResult(result) {
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = `
+                <div class="result ${result.correct ? 'correct' : 'incorrect'}">
+                    ${result.correct ? '✅ Correct!' : '❌ Incorrect'}
+                </div>
+                <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                    <strong>📖 Correct Answer:</strong> ${result.correct_answer}
+                </div>
+            `;
+            resultContainer.classList.remove('hidden');
+            
+            document.getElementById('answerInput').disabled = true;
+            document.getElementById('answerSection').classList.add('hidden');
+            document.getElementById('nextQuestionSection').classList.remove('hidden');
+        }
+
+        async function getHint() {
+            try {
+                const response = await fetch('/get_hint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const hintContainer = document.getElementById('hintContainer');
+                    hintContainer.innerHTML = `
+                        <div class="hint">
+                            <strong>💡 Hint:</strong> ${result.hint}
+                        </div>
+                    `;
+                    hintContainer.classList.remove('hidden');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Failed to get hint: ' + error.message);
+            }
+        }
+
+        function skipQuestion() {
+            // Simulate incorrect answer to move to next question
+            fetch('/submit_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    study_session_id: currentStudySessionId,
+                    answer: 'SKIPPED'
+                })
+            }).then(response => response.json())
+              .then(result => {
+                  const resultContainer = document.getElementById('resultContainer');
+                  resultContainer.innerHTML = `
+                      <div class="result" style="background: #fef5e7; color: #744210; border-color: #ed8936;">
+                          ⏭️ Question Skipped
+                      </div>
+                      <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                          <strong>📖 Correct Answer:</strong> ${result.correct_answer}
+                      </div>
+                  `;
+                  resultContainer.classList.remove('hidden');
+                  
+                  document.getElementById('answerInput').disabled = true;
+                  document.getElementById('answerSection').classList.add('hidden');
+                  document.getElementById('nextQuestionSection').classList.remove('hidden');
+                  showingResult = true;
+              });
+        }
+
+        function nextQuestion() {
+            loadNextQuestion();
+        }
+
+        function showFinalResults(results) {
+            const finalResults = document.getElementById('finalResults');
+            
+            let emoji = '';
+            let message = '';
+            if (results.percentage >= 90) {
+                emoji = '🌟';
+                message = 'Excellent work! You\'ve mastered this material!';
+            } else if (results.percentage >= 80) {
+                emoji = '👏';
+                message = 'Great job! You have a strong understanding!';
+            } else if (results.percentage >= 70) {
+                emoji = '👍';
+                message = 'Good work! Keep studying to improve!';
+            } else if (results.percentage >= 60) {
+                emoji = '📚';
+                message = 'You\'re getting there! Review the material and try again!';
+            } else {
+                emoji = '💪';
+                message = 'Keep studying! Practice makes perfect!';
+            }
+
+            finalResults.innerHTML = `
+                <div class="final-score">
+                    <h2>🎉 Study Session Complete!</h2>
+                    <div style="font-size: 2em; margin: 20px 0;">
+                        ${results.final_score}/${results.total_questions}
+                    </div>
+                    <div style="font-size: 1.5em; margin: 10px 0;">
+                        ${results.percentage.toFixed(1)}%
+                    </div>
+                    <div style="font-size: 1.2em; margin-top: 20px;">
+                        ${emoji} ${message}
+                    </div>
+                </div>
+            `;
+            
+            showSection('resultsSection');
+        }
+
+        function startOver() {
+            currentSessionId = null;
+            currentStudySessionId = null;
+            currentQuestionData = null;
+            showingResult = false;
+            
+            document.getElementById('uploadResult').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+            
+            showSection('uploadSection');
+        }
+
+        function showSection(sectionId) {
+            const sections = ['uploadSection', 'setupSection', 'studySection', 'resultsSection', 'loadingSection'];
+            sections.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Allow Enter key to submit answer
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitAnswer();
+            }
+        });
+    </script>
+</body>
+</html>
