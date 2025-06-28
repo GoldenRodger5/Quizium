@@ -1,0 +1,16 @@
+{
+  "name": "flashcard-app",
+  "version": "1.0.0",
+  "description": "AI-powered flashcard generator and study assistant",
+  "scripts": {
+    "dev": "uvicorn app:app --host 0.0.0.0 --port 8000 --reload",
+    "dev-main": "uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+    "start": "uvicorn app:app --host 0.0.0.0 --port 8000",
+    "test-render": "PORT=10000 uvicorn app:app --host 0.0.0.0 --port $PORT",
+    "install-deps": "pip install -r requirements.txt",
+    "clean": "find . -name '*.pyc' -delete && find . -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true"
+  },
+  "keywords": ["flashcards", "ai", "study", "education", "fastapi"],
+  "author": "Your Name",
+  "license": "MIT"
+}

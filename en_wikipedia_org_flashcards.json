@@ -4,7 +4,7 @@
       "category": "cat biology",
       "difficulty": "easy",
       "type": "question_answer",
-      "question": "What is the scientific name of the domestic cat?",
+      "question": "What is the scientific name for the domestic cat?",
       "answer": "Felis catus"
     },
     {
@@ -16,318 +16,192 @@
     },
     {
       "category": "cat biology",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What family does the domestic cat belong to?",
+      "answer": "Felidae"
+    },
+    {
+      "category": "cat biology",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "What are the two main roles of domestic cats?",
-      "answer": "Pet and working cat (vermin control)"
+      "question": "What are cats valued by humans for?",
+      "answer": "Companionship and ability to kill vermin"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How are a cat's claws adapted?",
+      "answer": "Retractable claws adapted to killing small prey species"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat hunting behavior",
+      "content": "Social species but solitary hunter and crepuscular predator"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "What evidence indicates that cats were first domesticated in the Near East rather than Egypt?",
+      "answer": "Excavation near a Neolithic grave in Shillourokambos, Cyprus (7500-7200 BC) shows earliest indication of tamed African wildcat"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How many chromosomes does the domestic cat have?",
+      "answer": "38 chromosomes"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "When did development of cat breeds begin?",
+      "answer": "Mid 19th century"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "easy",
+      "type": "fact",
+      "prompt": "Average size of domestic cats",
+      "content": "46 cm in head-to-body length, 23-25 cm in height, 30 cm long tails, 4-5 kg weight"
     },
     {
       "category": "cat anatomy",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "What physical adaptations help cats hunt effectively?",
-      "answer": "Retractable claws, strong flexible body, quick reflexes, sharp teeth, well-developed night vision and sense of smell"
+      "question": "How many cervical vertebrae do cats have?",
+      "answer": "7 cervical vertebrae"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What allows cats to pass through spaces they can fit their head through?",
+      "answer": "Free-floating clavicle bones attached to the shoulder"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is special about a cat's canine teeth?",
+      "answer": "Long canines for killing prey; can sever prey's spinal cord by stabbing between vertebrae"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "Why do cats have better dental health than most humans?",
+      "answer": "Thicker protective layer of enamel, less damaging saliva, less retention of food particles, and diet mostly devoid of sugar"
     },
     {
       "category": "cat behavior",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "How would you describe the social and hunting behavior of cats?",
-      "answer": "Cats are social species but solitary hunters and crepuscular predators"
+      "question": "What type of gait does a cat use when walking?",
+      "answer": "Pacing gait that alternates both legs together on each side"
     },
     {
-      "category": "cat intelligence",
+      "category": "cat biology",
       "difficulty": "medium",
       "type": "question_answer",
-      "question": "What cognitive abilities do cats possess?",
-      "answer": "Adaptation, learning through observation, problem-solving, strong memories, neuroplasticity, and cognitive skills comparable to those of a young child"
+      "question": "How has the cat changed during domestication?",
+      "answer": "Only minor changes in anatomy and behavior; still capable of surviving in the wild"
     },
     {
-      "category": "cat communication",
-      "difficulty": "easy",
-      "type": "question_answer",
-      "question": "What are the main ways cats communicate?",
-      "answer": "Meowing, purring, trilling, hissing, growling, grunting, and body language"
-    },
-    {
-      "category": "cat reproduction",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "When can female domestic cats have kittens?",
-      "answer": "From spring to late autumn in temperate zones and throughout the year in equatorial regions"
-    },
-    {
-      "category": "cat population",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "How many domestic cats are estimated to exist worldwide?",
-      "answer": "Approximately 600 million, with 400 million in Asia"
-    },
-    {
-      "category": "cat taxonomy",
+      "category": "cat biology",
       "difficulty": "hard",
-      "type": "question_answer",
-      "question": "What was the ruling of the International Commission on Zoological Nomenclature in 2003 regarding domestic cats?",
-      "answer": "They ruled that the domestic cat is a distinct species (Felis catus)"
+      "type": "fact",
+      "prompt": "Global cat population statistics",
+      "content": "600 million cats worldwide, 400 million in Asia (58 million pet cats in China), 73.8 million in the US, 10.9 million in the UK"
+    },
+    {
+      "category": "cat etymology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Cat",
+      "definition": "Derived from Old English 'catt', likely from Late Latin 'cattus' (6th century), possibly from an unidentified African language"
+    },
+    {
+      "category": "cat terminology",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Tom/Tomcat",
+      "definition": "A male cat"
+    },
+    {
+      "category": "cat terminology",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Queen",
+      "definition": "A female cat (sometimes specifically unspayed cats in estrous cycle)"
+    },
+    {
+      "category": "cat terminology",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Kitten",
+      "definition": "A juvenile cat"
+    },
+    {
+      "category": "cat terminology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Clowder/Glaring/Colony",
+      "definition": "Terms for a group of cats"
     },
     {
       "category": "cat evolution",
       "difficulty": "hard",
-      "type": "question_answer",
-      "question": "When did the genus Felis genetically diverge from other Felidae?",
-      "answer": "Around 6 to 7 million years ago"
-    },
-    {
-      "category": "cat domestication",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What evidence indicates early cat domestication?",
-      "answer": "Archaeological findings near a human Neolithic grave in Shillourokambos, Cyprus, dating to about 7500-7200 BC"
+      "type": "fact",
+      "prompt": "Evolutionary timeline of Felidae",
+      "content": "Common ancestor 10-15 million years ago; evolutionary radiation 8.38-14.45 million years ago; genus Felis diverged 6-7 million years ago"
     },
     {
       "category": "cat anatomy",
       "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What is unique about cats' cervical vertebrae compared to other mammals?",
-      "answer": "Cats have seven cervical vertebrae like most mammals, but have extra lumbar and thoracic vertebrae that account for their spinal mobility and flexibility"
+      "type": "fact",
+      "prompt": "Cat paw anatomy",
+      "content": "Most cats have 5 claws on front paws, 4 on rear paws, with a dewclaw proximal to the others"
     },
     {
       "category": "cat anatomy",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "How do cats' clavicle bones differ from humans?",
-      "answer": "Cats have free-floating clavicle bones that allow them to pass through any space into which they can fit their head"
-    },
-    {
-      "category": "cat senses",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "How does a cat's vision compare to human vision in low light?",
-      "answer": "Cats can see at one-sixth the light level required for human vision"
-    },
-    {
-      "category": "cat senses",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What is the hearing range of cats compared to humans?",
-      "answer": "Cats can detect frequencies from 55 Hz to 79 kHz, while humans can only detect 20 Hz to 20 kHz"
-    },
-    {
-      "category": "cat behavior",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "How do cats drink water?",
-      "answer": "They touch the smooth tip of their tongue to the surface of water and quickly retract it like a corkscrew, drawing water upward into their mouths"
-    },
-    {
-      "category": "cat impact",
-      "difficulty": "hard",
-      "type": "question_answer",
-      "question": "How many birds and mammals are domestic cats estimated to kill annually in the United States?",
-      "answer": "1.3 to 4.0 billion birds and 6.3 to 22.3 billion mammals"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Crepuscular",
-      "definition": "Active primarily during twilight (dawn and dusk)"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Retractable claws",
-      "definition": "Claws that can be extended for use and withdrawn into protective sheaths when not needed"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Neuroplasticity",
-      "definition": "The brain's ability to reorganize itself by forming new neural connections based on experiences"
-    },
-    {
-      "category": "cat biology",
       "difficulty": "medium",
       "type": "vocabulary",
       "term": "Digitigrade",
-      "definition": "Walking on toes with the heel and wrist raised off the ground"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Tapetum lucidum",
-      "definition": "A reflective layer behind the retina that increases the light available to the photoreceptors, enhancing night vision"
-    },
-    {
-      "category": "cat behavior",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Kneading",
-      "definition": "The rhythmic pushing motion cats make with their paws, often when content"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "hard",
-      "type": "vocabulary",
-      "term": "Estrous cycle",
-      "definition": "The reproductive cycle in female cats, characterized by periods of fertility and receptivity to mating"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "hard",
-      "type": "vocabulary",
-      "term": "Felidae",
-      "definition": "The biological family of cats, including all wild and domestic cat species"
-    },
-    {
-      "category": "cat behavior",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Feral cat",
-      "definition": "A domestic cat that lives outdoors and avoids human contact, often born in the wild"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Vibrissae",
-      "definition": "Specialized sensory hairs (whiskers) that help cats navigate and sense their environment"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Litter",
-      "definition": "A group of kittens born to one mother cat at the same time"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Queen",
-      "definition": "A female cat, especially one used for breeding"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Tomcat",
-      "definition": "A male cat, especially one used for breeding"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Neoteny",
-      "definition": "The retention of juvenile features in adult animals; cats live in a type of extended kittenhood"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Pheromones",
-      "definition": "Chemical substances secreted and perceived by cats that affect the behavior of other cats"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "hard",
-      "type": "vocabulary",
-      "term": "Carnassial pair",
-      "definition": "The premolar and first molar on each side of a cat's mouth that function like scissors to shear meat"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "hard",
-      "type": "vocabulary",
-      "term": "Cat righting reflex",
-      "definition": "The innate ability of cats to orient themselves in mid-air to land on their feet when falling"
-    },
-    {
-      "category": "cat history",
-      "difficulty": "medium",
-      "type": "vocabulary",
-      "term": "Ailouros",
-      "definition": "Ancient Greek word for 'cat', meaning 'thing with the waving tail'"
-    },
-    {
-      "category": "cat anatomy",
-      "difficulty": "easy",
-      "type": "fact",
-      "prompt": "Size of domestic cats",
-      "content": "Average about 46 cm in head-to-body length, 23-25 cm in height, with 30 cm long tails. Adult domestic cats typically weigh 4-5 kg"
-    },
-    {
-      "category": "cat biology",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Cat taste buds",
-      "content": "Cats have about 470 taste buds, compared to more than 9,000 on the human tongue, and cannot taste sweetness"
-    },
-    {
-      "category": "cat behavior",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Cat sleep patterns",
-      "content": "Cats sleep between 12 and 16 hours daily, with 13 to 14 being the average. Some cats can sleep as much as 20 hours"
-    },
-    {
-      "category": "cat reproduction",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Litter size",
-      "content": "Female cats have one to six kittens per litter, with an average of three kittens"
-    },
-    {
-      "category": "cat lifespan",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Cat lifespan",
-      "content": "The average lifespan of pet cats has risen from about 7 years in the early 1980s to about 13 years as of 2023"
-    },
-    {
-      "category": "cat population",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Cat ownership by country",
-      "content": "The United States leads in cat ownership with 73.8 million cats, while China has 58 million pet cats"
-    },
-    {
-      "category": "cat population",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Global cat population",
-      "content": "Out of the estimated 600 million cats worldwide, 400 million reside in Asia"
+      "definition": "Walking on toes with the bones of the feet making up the lower part of the visible leg"
     },
     {
       "category": "cat anatomy",
       "difficulty": "medium",
       "type": "fact",
-      "prompt": "Cat dentition",
-      "content": "Cats have specialized jaw structure with long canine teeth for killing prey and carnassial teeth that shear meat like scissors"
+      "prompt": "Cat skull characteristics",
+      "content": "Large eye sockets, powerful specialized jaw, narrowly spaced canine teeth adapted for small rodent prey"
     },
     {
-      "category": "cat genetics",
-      "difficulty": "hard",
+      "category": "cat biology",
+      "difficulty": "medium",
       "type": "fact",
-      "prompt": "Cat genetic disorders",
-      "content": "About 250 heritable genetic disorders have been identified in cats, many similar to human inborn errors of metabolism"
+      "prompt": "Traits that pre-adapted cats for domestication",
+      "content": "Small size, social nature, obvious body language, love of play, high intelligence, grooming habits, and waste burial instinct"
     },
     {
       "category": "cat history",
-      "difficulty": "medium",
+      "difficulty": "hard",
       "type": "fact",
-      "prompt": "Cat domestication timeline",
-      "content": "Though long thought to have been domesticated in ancient Egypt around 3100 BC, evidence now shows domestication occurred around 7500 BC in the Near East"
+      "prompt": "Introduction of cats to Europe",
+      "content": "First evidence in Greece around 1200 BC; introduced by Greek, Phoenician, Carthaginian and Etruscan traders; reached Corsica and Sardinia by 1st century AD"
     },
     {
       "category": "cat biology",
       "difficulty": "hard",
       "type": "fact",
-      "prompt": "Cat chromosomes and genes",
-      "content": "Cats are diploid with 38 chromosomes and roughly 20,000 genes"
+      "prompt": "Alternative cat domestication",
+      "content": "Leopard cat was independently tamed in China around 5500 BC but left no trace in modern domestic cat populations"
     }
   ]
 }

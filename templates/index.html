@@ -246,9 +246,146 @@
             margin: 0 auto 20px auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Flashcard Styles */
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: #f7fafc;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            background: white;
+            border-bottom-color: #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            background: #edf2f7;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .flashcard-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .flashcard-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            perspective: 1000px;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-type {
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0.8;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            font-size: 18px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #cardCounter {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4a5568;
         }
 
         @media (max-width: 600px) {
@@ -321,7 +458,85 @@
                        style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
             </div>
             <div style="text-align: center;">
+                <button class="btn" onclick="showFlashcardsView()">📚 View Flashcards</button>
                 <button class="btn" onclick="startStudySession()">🎯 Start Study Session</button>
+            </div>
+        </div>
+
+        <!-- Flashcards View Section -->
+        <div id="flashcardsViewSection" class="card hidden">
+            <h2>📚 Your Flashcards</h2>
+            
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <button class="tab-button active" onclick="switchTab('browse')">📖 Browse Cards</button>
+                <button class="tab-button" onclick="switchTab('study')" id="studyTabButton">🎯 Study Mode</button>
+            </div>
+
+            <!-- Browse Cards Tab -->
+            <div id="browseTab" class="tab-content active">
+                <div class="flashcard-navigation">
+                    <button class="nav-btn" onclick="previousCard()" id="prevBtn">⬅️ Previous</button>
+                    <span id="cardCounter">1 / 10</span>
+                    <button class="nav-btn" onclick="nextCard()" id="nextBtn">Next ➡️</button>
+                </div>
+                
+                <div class="flashcard-container">
+                    <div class="flashcard" id="currentFlashcard" onclick="flipCard()">
+                        <div class="flashcard-front" id="cardFront">
+                            <div class="card-type" id="cardType">Question</div>
+                            <div class="card-content" id="cardQuestion">Click to load flashcards</div>
+                        </div>
+                        <div class="flashcard-back" id="cardBack">
+                            <div class="card-type">Answer</div>
+                            <div class="card-content" id="cardAnswer">Answer will appear here</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flashcard-controls">
+                    <button class="btn btn-secondary" onclick="flipCard()">🔄 Flip Card</button>
+                    <button class="btn" onclick="switchTab('study')">🎯 Start Studying</button>
+                    <button class="btn" onclick="restartStudySession(); switchTab('study');" style="background: #e53e3e;" onmouseover="this.style.background='#c53030'" onmouseout="this.style.background='#e53e3e'">🔄 Restart Study Session</button>
+                </div>
+            </div>
+
+            <!-- Study Mode Tab -->
+            <div id="studyTab" class="tab-content hidden">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <label for="studyNumQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
+                    <input type="number" id="studyNumQuestions" min="1" value="10" 
+                           style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
+                    <button class="btn" onclick="startStudyMode()" style="margin-left: 10px;">🎯 Start Study Session</button>
+                </div>
+                
+                <div id="studyProgressContainer" class="hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="studyProgressFill"></div>
+                    </div>
+                    <div class="score" id="studyScoreDisplay">Score: 0/0</div>
+                </div>
+                
+                <div id="studyQuestionContainer" class="hidden">
+                    <div id="studyQuestionInfo" class="question-info"></div>
+                    <div id="studyQuestionText" class="question-text"></div>
+                    
+                    <div id="studyAnswerSection">
+                        <textarea id="studyAnswerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
+                        <div style="text-align: center;">
+                            <button class="btn" onclick="submitStudyAnswer()">✅ Submit Answer</button>
+                            <button class="btn btn-hint" onclick="getStudyHint()">💡 Get Hint</button>
+                            <button class="btn btn-secondary" onclick="skipStudyQuestion()">⏭️ Skip</button>
+                        </div>
+                    </div>
+                    
+                    <div id="studyHintContainer" class="hidden"></div>
+                    <div id="studyResultContainer" class="hidden"></div>
+                    
+                    <div id="studyNextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
+                        <button class="btn" onclick="loadNextQuestion('study')">➡️ Next Question</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -377,7 +592,11 @@
         let currentSessionId = null;
         let currentStudySessionId = null;
         let currentQuestionData = null;
+        let currentFlashcards = [];
         let showingResult = false;
+        let studySessionActive = false;
+        let studySessionComplete = false;
+        let studyResults = null;
 
         // File upload functionality
         const uploadArea = document.getElementById('uploadArea');
@@ -420,6 +639,15 @@
 
                 if (response.ok) {
                     currentSessionId = result.session_id;
+                    currentFlashcards = result.flashcards || []; // Store flashcards from upload
+                    
+                    // Reset any active study session since we have new flashcards
+                    currentStudySessionId = null;
+                    studySessionActive = false;
+                    studySessionComplete = false;
+                    studyResults = null;
+                    showingResult = false;
+                    
                     showUploadSuccess(result);
                     showSetupSection(result.flashcard_count);
                 } else {
@@ -505,6 +733,15 @@
 
                 if (response.ok) {
                     currentFlashcards = result.flashcards;
+                    currentSessionId = result.session_id; // Store the session ID
+                    
+                    // Reset any active study session since we have new flashcards
+                    currentStudySessionId = null;
+                    studySessionActive = false;
+                    studySessionComplete = false;
+                    studyResults = null;
+                    showingResult = false;
+                    
                     urlResult.innerHTML = `
                         <div class="result correct">
                             ✅ Successfully generated ${result.flashcards.length} flashcards from URL!
@@ -535,6 +772,7 @@
         });
 
         function showSetupSection(flashcardCount) {
+            // Store flashcards data and go directly to flashcards view
             const flashcardInfo = document.getElementById('flashcardInfo');
             flashcardInfo.innerHTML = `
                 <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
@@ -542,44 +780,98 @@
                 </p>
             `;
             
+            // Update the study input max values
             document.getElementById('numQuestions').max = flashcardCount;
             document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
+            document.getElementById('studyNumQuestions').max = flashcardCount;
+            document.getElementById('studyNumQuestions').value = Math.min(10, flashcardCount);
             
-            showSection('setupSection');
+            // Go directly to flashcards view
+            showFlashcardsView();
         }
 
         async function startStudySession() {
-            const numQuestions = parseInt(document.getElementById('numQuestions').value);
-            
-            showSection('loadingSection');
+            // Redirect to the tabbed study interface instead of standalone
+            showFlashcardsView();
+            switchTab('study');
+        }
 
+        // New function for starting study mode from the tabbed interface
+        async function startStudyMode() {
+            console.log('🔍 startStudyMode called');
+            console.log('🔍 currentSessionId:', currentSessionId);
+            
+            if (!currentSessionId) {
+                alert('No flashcards session available. Please generate flashcards first.');
+                return;
+            }
+
+            const numQuestions = parseInt(document.getElementById('studyNumQuestions').value);
+            console.log('🔍 numQuestions:', numQuestions);
+            
             try {
+                const requestBody = {
+                    session_id: currentSessionId,
+                    num_questions: numQuestions
+                };
+                console.log('🔍 Sending request body:', requestBody);
+                
                 const response = await fetch('/start_session', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        session_id: currentSessionId,
-                        num_questions: numQuestions
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
+                console.log('🔍 Response status:', response.status);
                 const result = await response.json();
+                console.log('🔍 Response result:', result);
 
                 if (response.ok) {
                     currentStudySessionId = result.study_session_id;
-                    showSection('studySection');
-                    loadNextQuestion();
+                    studySessionActive = true;
+                    studySessionComplete = false;
+                    studyResults = null;
+                    showingResult = false;
+                    updateStudyTabStatus();
+                    
+                    // Show the progress and question containers in study tab
+                    document.getElementById('studyProgressContainer').classList.remove('hidden');
+                    document.getElementById('studyQuestionContainer').classList.remove('hidden');
+                    
+                    // Load the first question for study mode
+                    loadNextQuestion('study');
                 } else {
-                    showUploadError(result.error);
+                    console.error('🔍 Error response:', result);
+                    if (result.detail && result.detail.includes('Session expired')) {
+                        console.log('🔄 Attempting to recreate session...');
+                        // Try to recreate the session automatically
+                        const sessionRecreated = await recreateSessionIfNeeded();
+                        if (sessionRecreated) {
+                            // Retry starting the study session
+                            console.log('🔄 Retrying study session with new session...');
+                            await startStudyMode();
+                            return;
+                        } else {
+                            // Fallback to manual regeneration
+                            if (confirm('Your session has expired (server was restarted). Would you like to regenerate your flashcards?')) {
+                                currentSessionId = null;
+                                currentFlashcards = [];
+                                showSection('uploadSection');
+                            }
+                        }
+                    } else {
+                        alert('Error starting study session: ' + (result.error || result.detail));
+                    }
                 }
             } catch (error) {
-                showUploadError('Failed to start study session: ' + error.message);
+                console.error('🔍 Error in startStudyMode:', error);
+                alert('Failed to start study session: ' + error.message);
             }
         }
 
-        async function loadNextQuestion() {
+        async function loadNextQuestion(mode = 'normal') {
             try {
                 const response = await fetch('/get_question', {
                     method: 'POST',
@@ -595,43 +887,76 @@
 
                 if (response.ok) {
                     if (result.complete) {
-                        showFinalResults(result);
+                        if (mode === 'study') {
+                            showStudyFinalResults(result);
+                        } else {
+                            showFinalResults(result);
+                        }
                     } else {
                         currentQuestionData = result;
-                        displayQuestion(result);
+                        displayQuestion(result, mode);
                         showingResult = false;
                     }
                 } else {
-                    alert('Error: ' + result.error);
+                    alert('Error: ' + (result.error || result.detail));
                 }
             } catch (error) {
                 alert('Failed to load question: ' + error.message);
             }
         }
 
-        function displayQuestion(questionData) {
+        function displayQuestion(questionData, mode = 'normal') {
+            // Determine which elements to update based on mode
+            const progressFill = mode === 'study' ? 
+                document.getElementById('studyProgressFill') : 
+                document.getElementById('progressFill');
+            const scoreDisplay = mode === 'study' ? 
+                document.getElementById('studyScoreDisplay') : 
+                document.getElementById('scoreDisplay');
+            const questionInfo = mode === 'study' ? 
+                document.getElementById('studyQuestionInfo') : 
+                document.getElementById('questionInfo');
+            const questionText = mode === 'study' ? 
+                document.getElementById('studyQuestionText') : 
+                document.getElementById('questionText');
+            const answerInput = mode === 'study' ? 
+                document.getElementById('studyAnswerInput') : 
+                document.getElementById('answerInput');
+            const hintContainer = mode === 'study' ? 
+                document.getElementById('studyHintContainer') : 
+                document.getElementById('hintContainer');
+            const resultContainer = mode === 'study' ? 
+                document.getElementById('studyResultContainer') : 
+                document.getElementById('resultContainer');
+            const answerSection = mode === 'study' ? 
+                document.getElementById('studyAnswerSection') : 
+                document.getElementById('answerSection');
+            const nextQuestionSection = mode === 'study' ? 
+                document.getElementById('studyNextQuestionSection') : 
+                document.getElementById('nextQuestionSection');
+
             // Update progress
             const progress = (questionData.question_number - 1) / questionData.total_questions * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('scoreDisplay').textContent = 
+            progressFill.style.width = progress + '%';
+            scoreDisplay.textContent = 
                 `Score: ${questionData.current_score}/${questionData.question_number - 1} | Question ${questionData.question_number}/${questionData.total_questions}`;
 
             // Display question info
-            document.getElementById('questionInfo').innerHTML = `
+            questionInfo.innerHTML = `
                 <strong>Category:</strong> ${questionData.category} | 
                 <strong>Difficulty:</strong> ${questionData.difficulty}
             `;
 
             // Display question
-            document.getElementById('questionText').textContent = questionData.question;
+            questionText.textContent = questionData.question;
 
             // Reset UI
-            document.getElementById('answerInput').value = '';
-            document.getElementById('answerInput').disabled = false;
-            document.getElementById('hintContainer').classList.add('hidden');
-            document.getElementById('resultContainer').classList.add('hidden');
-            document.getElementById('answerSection').classList.remove('hidden');
-            document.getElementById('nextQuestionSection').classList.add('hidden');
+            answerInput.value = '';
+            answerInput.disabled = false;
+            hintContainer.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            answerSection.classList.remove('hidden');
+            nextQuestionSection.classList.add('hidden');
         }
 
         async function submitAnswer() {
@@ -671,21 +996,47 @@
             }
         }
 
-        function showResult(result) {
-            const resultContainer = document.getElementById('resultContainer');
-            resultContainer.innerHTML = `
-                <div class="result ${result.correct ? 'correct' : 'incorrect'}">
-                    ${result.correct ? '✅ Correct!' : '❌ Incorrect'}
-                </div>
+        function showResult(result, mode = 'normal') {
+            const resultContainer = mode === 'study' ? 
+                document.getElementById('studyResultContainer') : 
+                document.getElementById('resultContainer');
+            const answerInput = mode === 'study' ? 
+                document.getElementById('studyAnswerInput') : 
+                document.getElementById('answerInput');
+            const answerSection = mode === 'study' ? 
+                document.getElementById('studyAnswerSection') : 
+                document.getElementById('answerSection');
+            const nextQuestionSection = mode === 'study' ? 
+                document.getElementById('studyNextQuestionSection') : 
+                document.getElementById('nextQuestionSection');
+            
+            let resultHTML = '';
+            if (result.skipped) {
+                resultHTML = `
+                    <div class="result" style="background: #fef5e7; color: #744210; border: 2px solid #ed8936;">
+                        ⏭️ Question Skipped
+                    </div>
+                `;
+            } else {
+                resultHTML = `
+                    <div class="result ${result.correct ? 'correct' : 'incorrect'}">
+                        ${result.correct ? '✅ Correct!' : '❌ Incorrect'}
+                    </div>
+                `;
+            }
+            
+            resultHTML += `
                 <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
                     <strong>📖 Correct Answer:</strong> ${result.correct_answer}
                 </div>
             `;
+            
+            resultContainer.innerHTML = resultHTML;
             resultContainer.classList.remove('hidden');
             
-            document.getElementById('answerInput').disabled = true;
-            document.getElementById('answerSection').classList.add('hidden');
-            document.getElementById('nextQuestionSection').classList.remove('hidden');
+            answerInput.disabled = true;
+            if (answerSection) answerSection.classList.add('hidden');
+            if (nextQuestionSection) nextQuestionSection.classList.remove('hidden');
         }
 
         async function getHint() {
@@ -793,24 +1144,442 @@
             showSection('resultsSection');
         }
 
-        function startOver() {
-            currentSessionId = null;
+        function showStudyFinalResults(results) {
+            // Store results and update session state
+            studyResults = results;
+            studySessionActive = false;
+            studySessionComplete = true;
+            updateStudyTabStatus();
+            
+            displayStudyResults();
+        }
+
+        function displayStudyResults() {
+            // For study mode within the flashcards view, show results in the study tab
+            const studyTab = document.getElementById('studyTab');
+            
+            let emoji = '';
+            let message = '';
+            if (studyResults.percentage >= 90) {
+                emoji = '🌟';
+                message = 'Excellent work! You\'ve mastered this material!';
+            } else if (studyResults.percentage >= 80) {
+                emoji = '👏';
+                message = 'Great job! You have a strong understanding!';
+            } else if (studyResults.percentage >= 70) {
+                emoji = '👍';
+                message = 'Good work! Keep studying to improve!';
+            } else if (studyResults.percentage >= 60) {
+                emoji = '📚';
+                message = 'You\'re getting there! Review the material and try again!';
+            } else {
+                emoji = '💪';
+                message = 'Keep studying! Practice makes perfect!';
+            }
+
+            studyTab.innerHTML = `
+                <div class="final-score">
+                    <h2>🎉 Study Session Complete!</h2>
+                    <div style="font-size: 2em; margin: 20px 0;">
+                        ${studyResults.final_score}/${studyResults.total_questions}
+                    </div>
+                    <div style="font-size: 1.5em; margin: 10px 0;">
+                        ${studyResults.percentage.toFixed(1)}%
+                    </div>
+                    <div style="font-size: 1.2em; margin-top: 20px;">
+                        ${emoji} ${message}
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <button class="btn" onclick="restartStudySession()">🔄 Start New Study Session</button>
+                        <button class="btn btn-secondary" onclick="switchTab('browse')">📚 Browse Cards</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function restartStudySession() {
+            // Reset session state
             currentStudySessionId = null;
-            currentQuestionData = null;
+            studySessionActive = false;
+            studySessionComplete = false;
+            studyResults = null;
             showingResult = false;
+            currentQuestionData = null;
+            updateStudyTabStatus();
             
-            document.getElementById('uploadResult').classList.add('hidden');
-            document.getElementById('fileInput').value = '';
+            // Reset the study interface
+            resetStudyInterface();
+        }
+
+        function resetStudyInterface() {
+            // Reset the study tab to its original state
+            const studyTab = document.getElementById('studyTab');
+            studyTab.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <label for="studyNumQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
+                    <input type="number" id="studyNumQuestions" min="1" value="10" 
+                           style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
+                    <button class="btn" onclick="startStudyMode()" style="margin-left: 10px;">🎯 Start Study Session</button>
+                </div>
+                
+                <div id="studyProgressContainer" class="hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="studyProgressFill"></div>
+                    </div>
+                    <div class="score" id="studyScoreDisplay">Score: 0/0</div>
+                </div>
+                
+                <div id="studyQuestionContainer" class="hidden">
+                    <div id="studyQuestionInfo" class="question-info"></div>
+                    <div id="studyQuestionText" class="question-text"></div>
+                    
+                    <div id="studyAnswerSection">
+                        <textarea id="studyAnswerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
+                        <div style="text-align: center;">
+                            <button class="btn" onclick="submitStudyAnswer()">✅ Submit Answer</button>
+                            <button class="btn btn-hint" onclick="getStudyHint()">💡 Get Hint</button>
+                            <button class="btn btn-secondary" onclick="skipStudyQuestion()">⏭️ Skip</button>
+                        </div>
+                    </div>
+                    
+                    <div id="studyHintContainer" class="hidden"></div>
+                    <div id="studyResultContainer" class="hidden"></div>
+                    
+                    <div id="studyNextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
+                        <button class="btn" onclick="loadNextQuestion('study')">➡️ Next Question</button>
+                    </div>
+                </div>
+            `;
             
-            showSection('uploadSection');
+            // Set the number of questions to match available flashcards
+            if (currentFlashcards && currentFlashcards.length > 0) {
+                const studyInput = document.getElementById('studyNumQuestions');
+                if (studyInput) {
+                    studyInput.max = currentFlashcards.length;
+                    studyInput.value = Math.min(10, currentFlashcards.length);
+                }
+            }
+        }
+
+        function resetStudyMode() {
+            restartStudySession();
+        }
+
+        function startOver() {
+            location.reload();
+        }
+
+        // Flashcard browsing functionality
+        let currentCardIndex = 0;
+        let isCardFlipped = false;
+        
+        function showFlashcardsView() {
+            if (!currentFlashcards || currentFlashcards.length === 0) {
+                alert('No flashcards available. Please generate some first.');
+                return;
+            }
+            
+            showSection('flashcardsViewSection');
+            currentCardIndex = 0;
+            isCardFlipped = false;
+            updateStudyTabStatus();
+            
+            // Restore the appropriate tab based on session state
+            if (studySessionActive || studySessionComplete) {
+                switchTab('study');
+            } else {
+                switchTab('browse');
+            }
+            
+            updateFlashcard();
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            if (tabName === 'browse') {
+                document.getElementById('browseTab').classList.add('active');
+                document.getElementById('browseTab').style.display = 'block';
+                updateFlashcard();
+            } else if (tabName === 'study') {
+                document.getElementById('studyTab').classList.add('active');
+                document.getElementById('studyTab').style.display = 'block';
+                
+                // Restore study session state if active
+                if (studySessionComplete && studyResults) {
+                    displayStudyResults();
+                } else if (studySessionActive && currentStudySessionId) {
+                    // Show the active study session
+                    document.getElementById('studyProgressContainer').classList.remove('hidden');
+                    document.getElementById('studyQuestionContainer').classList.remove('hidden');
+                    
+                    // If we have a current question, display it
+                    if (currentQuestionData) {
+                        displayQuestion(currentQuestionData, 'study');
+                    }
+                } else {
+                    // Show the initial study setup
+                    resetStudyInterface();
+                }
+                
+                // Set the number of questions to match available flashcards
+                if (currentFlashcards && currentFlashcards.length > 0) {
+                    const studyInput = document.getElementById('studyNumQuestions');
+                    if (studyInput) {
+                        studyInput.max = currentFlashcards.length;
+                        studyInput.value = Math.min(10, currentFlashcards.length);
+                    }
+                }
+            }
+        }
+
+        function updateFlashcard() {
+            if (!currentFlashcards || currentFlashcards.length === 0) return;
+            
+            const card = currentFlashcards[currentCardIndex];
+            const flashcard = document.getElementById('currentFlashcard');
+            const cardQuestion = document.getElementById('cardQuestion');
+            const cardAnswer = document.getElementById('cardAnswer');
+            const cardCounter = document.getElementById('cardCounter');
+            const cardType = document.getElementById('cardType');
+
+            // Reset flip state
+            isCardFlipped = false;
+            flashcard.classList.remove('flipped');
+
+            // Update content based on card type
+            if (card.type === 'question_answer') {
+                cardType.textContent = 'Question';
+                cardQuestion.textContent = card.question;
+                cardAnswer.textContent = card.answer;
+            } else if (card.type === 'vocabulary') {
+                cardType.textContent = 'Term';
+                cardQuestion.textContent = card.term;
+                cardAnswer.textContent = card.definition;
+            } else if (card.type === 'fact') {
+                cardType.textContent = 'Fact';
+                cardQuestion.textContent = card.prompt;
+                cardAnswer.textContent = card.content;
+            }
+
+            // Update counter
+            cardCounter.textContent = `${currentCardIndex + 1} / ${currentFlashcards.length}`;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentCardIndex === 0;
+            document.getElementById('nextBtn').disabled = currentCardIndex === currentFlashcards.length - 1;
+        }
+
+        function previousCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                updateFlashcard();
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIndex < currentFlashcards.length - 1) {
+                currentCardIndex++;
+                updateFlashcard();
+            }
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('currentFlashcard');
+            isCardFlipped = !isCardFlipped;
+            
+            if (isCardFlipped) {
+                flashcard.classList.add('flipped');
+            } else {
+                flashcard.classList.remove('flipped');
+            }
+        }
+
+        // Study mode functions for the study tab
+        async function submitStudyAnswer() {
+            const answerInput = document.getElementById('studyAnswerInput');
+            const userAnswer = answerInput.value.trim();
+            
+            if (!userAnswer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            if (!currentStudySessionId) {
+                alert('No active study session');
+                return;
+            }
+
+            try {
+                const response = await fetch('/submit_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId,
+                        answer: userAnswer
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showResult(result, 'study');
+                    showingResult = true;
+                } else {
+                    throw new Error(result.detail || 'Failed to submit answer');
+                }
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('Failed to submit answer: ' + error.message);
+            }
+        }
+
+        async function getStudyHint() {
+            try {
+                const response = await fetch('/get_hint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const hintContainer = document.getElementById('studyHintContainer');
+                    hintContainer.innerHTML = `
+                        <div class="hint">
+                            <strong>💡 Hint:</strong> ${result.hint}
+                        </div>
+                    `;
+                    hintContainer.classList.remove('hidden');
+                } else {
+                    alert('Error: ' + (result.error || result.detail));
+                }
+            } catch (error) {
+                alert('Failed to get hint: ' + error.message);
+            }
+        }
+
+        function skipStudyQuestion() {
+            // Simulate incorrect answer to move to next question
+            fetch('/submit_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    study_session_id: currentStudySessionId,
+                    answer: 'SKIPPED'
+                })
+            }).then(response => response.json())
+              .then(result => {
+                  showResult({
+                      ...result,
+                      correct: false,
+                      skipped: true
+                  }, 'study');
+                  showingResult = true;
+              })
+              .catch(error => {
+                  console.error('Error skipping question:', error);
+                  alert('Failed to skip question: ' + error.message);
+              });
+        }
+
+        // Enhanced answer submission for normal mode
+        async function submitAnswer() {
+            const answerInput = document.getElementById('answerInput');
+            const userAnswer = answerInput.value.trim();
+            
+            if (!userAnswer) {
+                alert('Please enter an answer');
+                return;
+            }
+
+            if (!currentStudySessionId) {
+                alert('No active study session');
+                return;
+            }
+
+            if (showingResult) {
+                nextQuestion();
+                return;
+            }
+
+            try {
+                const response = await fetch('/submit_answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        study_session_id: currentStudySessionId,
+                        answer: userAnswer
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showResult(result, 'normal');
+                    showingResult = true;
+                } else {
+                    throw new Error(result.detail || 'Failed to submit answer');
+                }
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('Failed to submit answer: ' + error.message);
+            }
         }
 
         function showSection(sectionId) {
-            const sections = ['uploadSection', 'setupSection', 'studySection', 'resultsSection', 'loadingSection'];
-            sections.forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
+            // Don't hide upload and URL sections - keep them always visible
+            const sectionsToHide = ['setupSection', 'studySection', 'resultsSection', 'loadingSection'];
+            
+            if (sectionId === 'flashcardsViewSection') {
+                // When showing flashcards view, hide only the non-input sections
+                sectionsToHide.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.classList.add('hidden');
+                    }
+                });
+                // Show the flashcards view
+                const flashcardsElement = document.getElementById('flashcardsViewSection');
+                if (flashcardsElement) {
+                    flashcardsElement.classList.remove('hidden');
+                }
+            } else {
+                // For other sections, hide everything except upload and URL sections
+                const allSections = ['setupSection', 'studySection', 'resultsSection', 'loadingSection', 'flashcardsViewSection'];
+                allSections.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.classList.add('hidden');
+                    }
+                });
+                // Show the target section
+                const targetElement = document.getElementById(sectionId);
+                if (targetElement) {
+                    targetElement.classList.remove('hidden');
+                }
+            }
         }
 
         // Allow Enter key to submit answer
@@ -818,6 +1587,78 @@
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 submitAnswer();
+            }
+        });
+
+        // Add Enter key support for study mode answer input (will be added dynamically)
+        document.addEventListener('keypress', (e) => {
+            if (e.target.id === 'studyAnswerInput' && e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitStudyAnswer();
+            }
+        });
+
+        function updateStudyTabStatus() {
+            const studyTabButton = document.getElementById('studyTabButton');
+            if (!studyTabButton) return;
+            
+            if (studySessionComplete) {
+                studyTabButton.innerHTML = '🎯 Study Mode ✅';
+                studyTabButton.style.background = '#c6f6d5';
+                studyTabButton.style.color = '#22543d';
+            } else if (studySessionActive) {
+                studyTabButton.innerHTML = '🎯 Study Mode 🔄';
+                studyTabButton.style.background = '#fef5e7';
+                studyTabButton.style.color = '#744210';
+            } else {
+                studyTabButton.innerHTML = '🎯 Study Mode';
+                studyTabButton.style.background = '';
+                studyTabButton.style.color = '';
+            }
+        }
+
+        // Function to recreate session if it was lost (e.g., due to server restart)
+        async function recreateSessionIfNeeded() {
+            if (!currentFlashcards || currentFlashcards.length === 0) {
+                return false;
+            }
+            
+            try {
+                // Try to create a new session with the current flashcards
+                const response = await fetch('/create_session_from_flashcards', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        flashcards: currentFlashcards
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    currentSessionId = result.session_id;
+                    console.log('✅ Successfully recreated session:', currentSessionId);
+                    return true;
+                }
+            } catch (error) {
+                console.error('Failed to recreate session:', error);
+            }
+            
+            return false;
+        }
+
+        // Check and recreate session on page load
+        window.addEventListener('load', async () => {
+            // Try to recreate session if it was lost
+            const sessionRestored = await recreateSessionIfNeeded();
+            if (sessionRestored) {
+                alert('Your previous session has been restored. You can continue studying now.');
+                showFlashcardsView();
+                switchTab('study');
+            } else {
+                // No session to restore, show upload section
+                showSection('uploadSection');
             }
         });
     </script>

@@ -5,112 +5,105 @@
       "difficulty": "easy",
       "type": "question_answer",
       "question": "What are dogs?",
-      "answer": "Domesticated mammals that live all over the world and are taken care of by people"
+      "answer": "Domesticated mammals that live all over the world and are taken care of by people."
     },
     {
       "category": "canine history",
       "difficulty": "medium",
       "type": "fact",
-      "prompt": "Historical significance of dogs",
-      "content": "Most historians believe dogs were the first animals to be domesticated"
+      "prompt": "Dogs in domestication history",
+      "content": "Most historians believe dogs were the first animals to be domesticated."
     },
     {
-      "category": "canine statistics",
+      "category": "canine popularity",
       "difficulty": "medium",
       "type": "fact",
       "prompt": "Dog ownership in the US",
-      "content": "Almost 43 million households in the United States own at least one dog"
-    },
-    {
-      "category": "canine breeds",
-      "difficulty": "medium",
-      "type": "fact",
-      "prompt": "Number of dog types",
-      "content": "There are over 150 types of dogs"
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What are Great Danes known for?",
-      "answer": "They are huge dogs (up to 30 inches tall and nearly 200 pounds) nicknamed 'gentle giants' due to their friendly nature"
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "How big are Chihuahuas?",
-      "answer": "Usually between 6 to 9 inches tall"
-    },
-    {
-      "category": "dog breeds",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What are Dalmatians known for?",
-      "answer": "Their white coat with black spots"
-    },
-    {
-      "category": "dog development",
-      "difficulty": "hard",
-      "type": "fact",
-      "prompt": "Dalmatian puppies at birth",
-      "content": "Dalmatian puppies are born completely white, with black spots appearing when they are about four weeks old"
+      "content": "In the United States alone, almost 43 million households own at least one dog."
     },
     {
       "category": "dog breeds",
       "difficulty": "easy",
       "type": "fact",
-      "prompt": "Pugs characteristics",
-      "content": "Small dogs with wrinkly faces that are sweet, gentle, and great around kids"
+      "prompt": "Number of dog types",
+      "content": "There are over 150 types of dogs."
     },
     {
-      "category": "canine physiology",
-      "difficulty": "hard",
+      "category": "dog breeds",
+      "difficulty": "medium",
       "type": "question_answer",
-      "question": "How do dogs see colors compared to humans?",
-      "answer": "Dogs see colors as yellows, browns, and blues, missing the reds and greens that humans can see"
+      "question": "How tall can Great Danes get and how much can they weigh?",
+      "answer": "Great Danes can get up to 30 inches tall and weigh almost 200 pounds."
     },
     {
-      "category": "canine physiology",
+      "category": "dog breeds",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Great Danes",
+      "definition": "Large dogs nicknamed 'gentle giants' that can reach 30 inches tall and weigh almost 200 pounds."
+    },
+    {
+      "category": "dog breeds",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Chihuahua",
+      "definition": "Small dogs usually between 6-9 inches tall with big personalities."
+    },
+    {
+      "category": "dog breeds",
       "difficulty": "medium",
       "type": "fact",
-      "prompt": "Dogs' sense of smell",
-      "content": "Dogs have a much better sense of smell than humans with more smell receptors in their noses and a larger part of the brain dedicated to processing smells"
+      "prompt": "Dalmatian puppies",
+      "content": "Dalmatians are born white, but their black spots appear when they are about four weeks old."
+    },
+    {
+      "category": "dog breeds",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Dalmatian",
+      "definition": "Dogs famous for their white coat and black spots."
+    },
+    {
+      "category": "dog breeds",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Pug",
+      "definition": "Small dogs with wrinkly faces that are sweet, gentle, and great around kids."
+    },
+    {
+      "category": "canine senses",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How do dogs see colors compared to humans?",
+      "answer": "Dogs see colors as yellows, browns, and blues, while humans see a fuller spectrum including reds and greens."
+    },
+    {
+      "category": "canine senses",
+      "difficulty": "hard",
+      "type": "fact",
+      "prompt": "Dog's sense of smell",
+      "content": "Dogs have more smell receptors in their noses than humans, and the part of their brain that processes smells is larger."
     },
     {
       "category": "canine development",
       "difficulty": "easy",
       "type": "vocabulary",
       "term": "Puppies",
-      "definition": "Baby dogs, considered puppies until they are one year old"
+      "definition": "Baby dogs, considered puppies until they are one year old."
     },
     {
       "category": "canine development",
-      "difficulty": "hard",
+      "difficulty": "medium",
       "type": "fact",
       "prompt": "Newborn puppies",
-      "content": "Puppies are born blind, deaf, and without teeth"
+      "content": "Puppies are born blind, deaf, and without teeth."
     },
     {
       "category": "canine physiology",
       "difficulty": "hard",
       "type": "question_answer",
-      "question": "How do dogs sweat?",
-      "answer": "Dogs only sweat from their paws"
-    },
-    {
-      "category": "canine physiology",
-      "difficulty": "medium",
-      "type": "question_answer",
-      "question": "What is the main way dogs cool down?",
-      "answer": "By panting, not through sweating"
-    },
-    {
-      "category": "canine terminology",
-      "difficulty": "easy",
-      "type": "vocabulary",
-      "term": "Domesticated",
-      "definition": "Animals that are taken care of by people"
+      "question": "How do dogs sweat and cool down?",
+      "answer": "Dogs only sweat from their paws. Their main way of cooling down is by panting."
     }
   ]
 }

@@ -53,6 +53,9 @@ class HintRequest(BaseModel):
 class URLRequest(BaseModel):
     url: str
 
+class FlashcardsRequest(BaseModel):
+    flashcards: list
+
 def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -102,10 +105,14 @@ async def upload_file(file: UploadFile = File(...)):
         
         # Store flashcards in session
         session_id = str(uuid.uuid4())
-        sessions[session_id] = flashcards
+        sessions[session_id] = {
+            'flashcards': flashcards,
+            'study_session': None
+        }
         
         return {
             'session_id': session_id,
+            'flashcards': flashcards,
             'flashcard_count': len(flashcards),
             'message': f'Successfully loaded {len(flashcards)} flashcards'
         }
@@ -152,14 +159,23 @@ async def start_session(request: StartSessionRequest):
     session_id = request.session_id
     num_questions = request.num_questions
     
-    if not session_id or session_id not in sessions:
-        raise HTTPException(status_code=400, detail="Invalid session")
+    if not session_id:
+        raise HTTPException(status_code=400, detail="No session_id provided")
     
-    flashcards = sessions[session_id]
+    if session_id not in sessions:
+        # This could happen if the server restarted and sessions were lost
+        raise HTTPException(status_code=400, detail=f"Session expired or not found. Please regenerate your flashcards.")
+    
+    session_data = sessions[session_id]
+    flashcards = session_data.get('flashcards', [])
+    
+    if not flashcards:
+        raise HTTPException(status_code=400, detail="No flashcards found in session")
     
     # Shuffle and select requested number of flashcards
-    random.shuffle(flashcards)
-    selected_flashcards = flashcards[:num_questions]
+    flashcards_copy = flashcards.copy()  # Make a copy to avoid modifying original
+    random.shuffle(flashcards_copy)
+    selected_flashcards = flashcards_copy[:num_questions]
     
     # Store the selected flashcards for this session
     study_session_id = f"{session_id}_study"
@@ -283,6 +299,28 @@ async def get_hint(request: HintRequest):
     hint = generate_hint(question, correct_answer)
     
     return {'hint': hint}
+
+@app.post("/create_session_from_flashcards")
+async def create_session_from_flashcards(request: FlashcardsRequest):
+    """Create a new session from provided flashcards (used when session is lost)."""
+    try:
+        if not request.flashcards:
+            raise HTTPException(status_code=400, detail="No flashcards provided")
+        
+        # Create a new session
+        session_id = str(uuid.uuid4())
+        sessions[session_id] = {
+            'flashcards': request.flashcards,
+            'study_session': None
+        }
+        
+        return {
+            'session_id': session_id,
+            'flashcard_count': len(request.flashcards),
+            'message': f'Successfully created session with {len(request.flashcards)} flashcards'
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating session: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

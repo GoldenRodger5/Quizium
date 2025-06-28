@@ -154,6 +154,13 @@ def extract_youtube_transcript(url):
 
 def generate_flashcards(text_content):
     """Generate flashcards from text using Claude AI."""
+    
+    # Limit input text length to prevent token overflow
+    MAX_INPUT_LENGTH = 30000  # Roughly ~3000-4000 tokens
+    if len(text_content) > MAX_INPUT_LENGTH:
+        print(f"⚠️  Input text is {len(text_content)} characters. Truncating to {MAX_INPUT_LENGTH} characters for better processing.")
+        text_content = text_content[:MAX_INPUT_LENGTH] + "..."
+    
     prompt = f"""
     Please analyze the following text and create comprehensive flashcards for studying. 
     Generate the following types of flashcards:
@@ -207,7 +214,7 @@ def generate_flashcards(text_content):
     try:
         response = client.messages.create(
             model="claude-3-7-sonnet-20250219",
-            max_tokens=4000,
+            max_tokens=8000,  # Increased from 4000 to 8000
             messages=[
                 {"role": "user", "content": prompt}
             ]
@@ -215,7 +222,8 @@ def generate_flashcards(text_content):
         
         # Extract JSON from response
         response_text = response.content[0].text
-        print(f"Raw Claude response: {response_text[:500]}...")  # Debug output
+        print(f"Raw Claude response length: {len(response_text)} characters")
+        print(f"Raw Claude response preview: {response_text[:200]}...")  # Reduced debug output
         
         # Try to find and parse JSON in the response
         start_idx = response_text.find('{')
@@ -229,19 +237,64 @@ def generate_flashcards(text_content):
             
             # Try to parse JSON with better error handling
             try:
-                return json.loads(json_str)
+                parsed_json = json.loads(json_str)
+                print(f"✅ Successfully parsed JSON with {len(parsed_json.get('flashcards', []))} flashcards")
+                return parsed_json
             except json.JSONDecodeError as e:
                 print(f"JSON parsing error: {e}")
-                print(f"Problematic JSON around char {e.pos}: ...{json_str[max(0, e.pos-50):e.pos+50]}...")
+                print(f"Error at position {e.pos}")
                 
                 # Try to fix common issues and parse again
                 try:
                     # Remove trailing commas before closing brackets/braces
                     import re
                     json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
-                    return json.loads(json_str)
-                except json.JSONDecodeError:
-                    print("Failed to parse JSON even after cleanup")
+                    
+                    # Try to find incomplete JSON and fix it
+                    if json_str.count('{') > json_str.count('}'):
+                        # Add missing closing braces
+                        missing_braces = json_str.count('{') - json_str.count('}')
+                        json_str += '}' * missing_braces
+                        print(f"🔧 Added {missing_braces} missing closing braces")
+                    
+                    if json_str.count('[') > json_str.count(']'):
+                        # Add missing closing brackets
+                        missing_brackets = json_str.count('[') - json_str.count(']')
+                        json_str += ']' * missing_brackets
+                        print(f"🔧 Added {missing_brackets} missing closing brackets")
+                    
+                    parsed_json = json.loads(json_str)
+                    print(f"✅ Successfully fixed and parsed JSON with {len(parsed_json.get('flashcards', []))} flashcards")
+                    return parsed_json
+                    
+                except json.JSONDecodeError as e2:
+                    print(f"Failed to fix JSON: {e2}")
+                    
+                    # Last resort: try to extract partial flashcards
+                    try:
+                        # Look for individual flashcard objects
+                        import re
+                        flashcard_pattern = r'\{[^{}]*"type"[^{}]*\}'
+                        matches = re.findall(flashcard_pattern, json_str)
+                        
+                        if matches:
+                            print(f"🔧 Attempting to extract {len(matches)} partial flashcards")
+                            flashcards = []
+                            for match in matches[:10]:  # Limit to 10 flashcards
+                                try:
+                                    flashcard = json.loads(match)
+                                    flashcards.append(flashcard)
+                                except:
+                                    continue
+                            
+                            if flashcards:
+                                print(f"✅ Extracted {len(flashcards)} partial flashcards")
+                                return {"flashcards": flashcards}
+                    
+                    except Exception as e3:
+                        print(f"Partial extraction failed: {e3}")
+                    
+                    print("❌ All JSON parsing attempts failed")
                     return None
         else:
             print("Could not find valid JSON in response")
@@ -565,6 +618,8 @@ async def check_answer_endpoint(question: str, correct_answer: str, user_answer:
 async def generate_flashcards_from_url(request: URLRequest):
     """API endpoint to generate flashcards from a URL."""
     try:
+        import uuid
+        
         print(f"Processing URL: {request.url}")
         text = extract_text_from_url(request.url)
         if not text:
@@ -575,7 +630,14 @@ async def generate_flashcards_from_url(request: URLRequest):
         if not flashcards:
             raise HTTPException(status_code=500, detail="Failed to generate flashcards")
         
-        return flashcards
+        # Generate a session_id for compatibility with the frontend
+        session_id = str(uuid.uuid4())
+        
+        return {
+            "session_id": session_id,
+            "flashcards": flashcards.get('flashcards', []),
+            "message": f"Generated {len(flashcards.get('flashcards', []))} flashcards from URL"
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing URL: {str(e)}")
 

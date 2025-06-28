@@ -1,0 +1,38 @@
+🚀 FLASHCARD APP - QUICK REFERENCE CARD
+═════════════════════════════════════════
+
+📋 QUICK COMMANDS:
+┌─────────────────────────────────────────┐
+│ LOCAL DEVELOPMENT:                      │
+│ ./dev.sh local          Start dev server│
+│ make local              Alt. start      │
+│ npm run dev             npm-style       │
+├─────────────────────────────────────────┤
+│ RENDER TESTING:                         │
+│ ./dev.sh render-test    Test deploy     │
+│ ./dev.sh deploy         Check ready     │
+├─────────────────────────────────────────┤
+│ UTILITIES:                              │
+│ ./dev.sh install        Install deps    │
+│ ./dev.sh clean          Clean cache     │
+│ ./dev.sh status         Show status     │
+└─────────────────────────────────────────┘
+
+🌐 URLS:
+• Local:  http://localhost:8000
+• Render: https://your-app.onrender.com
+
+📁 KEY FILES:
+• app.py        → Web server (Render uses this)
+• main.py       → CLI tool + functions  
+• render.yaml   → Render configuration
+• dev.sh        → Development script
+
+⚡ ONE-LINER SWITCH:
+./dev.sh local     # Local development
+./dev.sh deploy    # Check Render readiness
+
+💡 ENVIRONMENT:
+• Copy .env.example to .env
+• Set CLAUDE_API_KEY in .env (local)
+• Set CLAUDE_API_KEY in Render dashboard (production)
