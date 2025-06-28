@@ -1,0 +1,333 @@
+{
+  "flashcards": [
+    {
+      "category": "cat biology",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What is the scientific name of the domestic cat?",
+      "answer": "Felis catus"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "When and where did cat domestication occur?",
+      "answer": "In the Near East around 7500 BC"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What are the two main roles of domestic cats?",
+      "answer": "Pet and working cat (vermin control)"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What physical adaptations help cats hunt effectively?",
+      "answer": "Retractable claws, strong flexible body, quick reflexes, sharp teeth, well-developed night vision and sense of smell"
+    },
+    {
+      "category": "cat behavior",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How would you describe the social and hunting behavior of cats?",
+      "answer": "Cats are social species but solitary hunters and crepuscular predators"
+    },
+    {
+      "category": "cat intelligence",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What cognitive abilities do cats possess?",
+      "answer": "Adaptation, learning through observation, problem-solving, strong memories, neuroplasticity, and cognitive skills comparable to those of a young child"
+    },
+    {
+      "category": "cat communication",
+      "difficulty": "easy",
+      "type": "question_answer",
+      "question": "What are the main ways cats communicate?",
+      "answer": "Meowing, purring, trilling, hissing, growling, grunting, and body language"
+    },
+    {
+      "category": "cat reproduction",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "When can female domestic cats have kittens?",
+      "answer": "From spring to late autumn in temperate zones and throughout the year in equatorial regions"
+    },
+    {
+      "category": "cat population",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How many domestic cats are estimated to exist worldwide?",
+      "answer": "Approximately 600 million, with 400 million in Asia"
+    },
+    {
+      "category": "cat taxonomy",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "What was the ruling of the International Commission on Zoological Nomenclature in 2003 regarding domestic cats?",
+      "answer": "They ruled that the domestic cat is a distinct species (Felis catus)"
+    },
+    {
+      "category": "cat evolution",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "When did the genus Felis genetically diverge from other Felidae?",
+      "answer": "Around 6 to 7 million years ago"
+    },
+    {
+      "category": "cat domestication",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What evidence indicates early cat domestication?",
+      "answer": "Archaeological findings near a human Neolithic grave in Shillourokambos, Cyprus, dating to about 7500-7200 BC"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is unique about cats' cervical vertebrae compared to other mammals?",
+      "answer": "Cats have seven cervical vertebrae like most mammals, but have extra lumbar and thoracic vertebrae that account for their spinal mobility and flexibility"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How do cats' clavicle bones differ from humans?",
+      "answer": "Cats have free-floating clavicle bones that allow them to pass through any space into which they can fit their head"
+    },
+    {
+      "category": "cat senses",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How does a cat's vision compare to human vision in low light?",
+      "answer": "Cats can see at one-sixth the light level required for human vision"
+    },
+    {
+      "category": "cat senses",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "What is the hearing range of cats compared to humans?",
+      "answer": "Cats can detect frequencies from 55 Hz to 79 kHz, while humans can only detect 20 Hz to 20 kHz"
+    },
+    {
+      "category": "cat behavior",
+      "difficulty": "medium",
+      "type": "question_answer",
+      "question": "How do cats drink water?",
+      "answer": "They touch the smooth tip of their tongue to the surface of water and quickly retract it like a corkscrew, drawing water upward into their mouths"
+    },
+    {
+      "category": "cat impact",
+      "difficulty": "hard",
+      "type": "question_answer",
+      "question": "How many birds and mammals are domestic cats estimated to kill annually in the United States?",
+      "answer": "1.3 to 4.0 billion birds and 6.3 to 22.3 billion mammals"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Crepuscular",
+      "definition": "Active primarily during twilight (dawn and dusk)"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Retractable claws",
+      "definition": "Claws that can be extended for use and withdrawn into protective sheaths when not needed"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Neuroplasticity",
+      "definition": "The brain's ability to reorganize itself by forming new neural connections based on experiences"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Digitigrade",
+      "definition": "Walking on toes with the heel and wrist raised off the ground"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Tapetum lucidum",
+      "definition": "A reflective layer behind the retina that increases the light available to the photoreceptors, enhancing night vision"
+    },
+    {
+      "category": "cat behavior",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Kneading",
+      "definition": "The rhythmic pushing motion cats make with their paws, often when content"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "vocabulary",
+      "term": "Estrous cycle",
+      "definition": "The reproductive cycle in female cats, characterized by periods of fertility and receptivity to mating"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "vocabulary",
+      "term": "Felidae",
+      "definition": "The biological family of cats, including all wild and domestic cat species"
+    },
+    {
+      "category": "cat behavior",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Feral cat",
+      "definition": "A domestic cat that lives outdoors and avoids human contact, often born in the wild"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Vibrissae",
+      "definition": "Specialized sensory hairs (whiskers) that help cats navigate and sense their environment"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "easy",
+      "type": "vocabulary",
+      "term": "Litter",
+      "definition": "A group of kittens born to one mother cat at the same time"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Queen",
+      "definition": "A female cat, especially one used for breeding"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Tomcat",
+      "definition": "A male cat, especially one used for breeding"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Neoteny",
+      "definition": "The retention of juvenile features in adult animals; cats live in a type of extended kittenhood"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Pheromones",
+      "definition": "Chemical substances secreted and perceived by cats that affect the behavior of other cats"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "vocabulary",
+      "term": "Carnassial pair",
+      "definition": "The premolar and first molar on each side of a cat's mouth that function like scissors to shear meat"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "vocabulary",
+      "term": "Cat righting reflex",
+      "definition": "The innate ability of cats to orient themselves in mid-air to land on their feet when falling"
+    },
+    {
+      "category": "cat history",
+      "difficulty": "medium",
+      "type": "vocabulary",
+      "term": "Ailouros",
+      "definition": "Ancient Greek word for 'cat', meaning 'thing with the waving tail'"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "easy",
+      "type": "fact",
+      "prompt": "Size of domestic cats",
+      "content": "Average about 46 cm in head-to-body length, 23-25 cm in height, with 30 cm long tails. Adult domestic cats typically weigh 4-5 kg"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat taste buds",
+      "content": "Cats have about 470 taste buds, compared to more than 9,000 on the human tongue, and cannot taste sweetness"
+    },
+    {
+      "category": "cat behavior",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat sleep patterns",
+      "content": "Cats sleep between 12 and 16 hours daily, with 13 to 14 being the average. Some cats can sleep as much as 20 hours"
+    },
+    {
+      "category": "cat reproduction",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Litter size",
+      "content": "Female cats have one to six kittens per litter, with an average of three kittens"
+    },
+    {
+      "category": "cat lifespan",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat lifespan",
+      "content": "The average lifespan of pet cats has risen from about 7 years in the early 1980s to about 13 years as of 2023"
+    },
+    {
+      "category": "cat population",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat ownership by country",
+      "content": "The United States leads in cat ownership with 73.8 million cats, while China has 58 million pet cats"
+    },
+    {
+      "category": "cat population",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Global cat population",
+      "content": "Out of the estimated 600 million cats worldwide, 400 million reside in Asia"
+    },
+    {
+      "category": "cat anatomy",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat dentition",
+      "content": "Cats have specialized jaw structure with long canine teeth for killing prey and carnassial teeth that shear meat like scissors"
+    },
+    {
+      "category": "cat genetics",
+      "difficulty": "hard",
+      "type": "fact",
+      "prompt": "Cat genetic disorders",
+      "content": "About 250 heritable genetic disorders have been identified in cats, many similar to human inborn errors of metabolism"
+    },
+    {
+      "category": "cat history",
+      "difficulty": "medium",
+      "type": "fact",
+      "prompt": "Cat domestication timeline",
+      "content": "Though long thought to have been domesticated in ancient Egypt around 3100 BC, evidence now shows domestication occurred around 7500 BC in the Near East"
+    },
+    {
+      "category": "cat biology",
+      "difficulty": "hard",
+      "type": "fact",
+      "prompt": "Cat chromosomes and genes",
+      "content": "Cats are diploid with 38 chromosomes and roughly 20,000 genes"
+    }
+  ]
+}

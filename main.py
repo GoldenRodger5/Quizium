@@ -6,7 +6,15 @@ import anthropic
 import random
 import os
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse, parse_qs
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,6 +28,13 @@ client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
 
 app = FastAPI()
 
+# Configure templates
+templates = Jinja2Templates(directory="templates")
+
+# Pydantic models for API requests
+class URLRequest(BaseModel):
+    url: str
+
 # Add this to handle HEAD requests
 @app.head("/")
 async def head_root():
@@ -28,6 +43,15 @@ async def head_root():
 @app.get("/")
 async def root():
     return {"message": "Flashcard API is running"}
+
+@app.get("/app", response_class=HTMLResponse)
+async def get_app():
+    """Serve the flashcard web application."""
+    try:
+        with open("templates/index.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Application template not found")
 
 def extract_text_from_pdf(pdf_path):
     """Extract text content from a PDF file."""
@@ -40,6 +64,92 @@ def extract_text_from_pdf(pdf_path):
         return text.strip()
     except Exception as e:
         print(f"Error reading PDF: {e}")
+        return None
+
+def extract_text_from_url(url):
+    """Extract text content from various web sources."""
+    try:
+        # Determine content type based on URL
+        if 'youtube.com' in url or 'youtu.be' in url:
+            return extract_youtube_transcript(url)
+        elif 'wikipedia.org' in url:
+            return extract_wikipedia_content(url)
+        else:
+            return extract_general_webpage(url)
+    except Exception as e:
+        print(f"Error extracting content from URL: {e}")
+        return None
+
+def extract_general_webpage(url):
+    """Extract text from general web pages."""
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.get(url, headers=headers, timeout=10)
+    response.raise_for_status()
+    
+    soup = BeautifulSoup(response.content, 'html.parser')
+    
+    # Remove script and style elements
+    for script in soup(["script", "style", "nav", "header", "footer", "aside"]):
+        script.decompose()
+    
+    # Get text from main content areas
+    main_content = soup.find('main') or soup.find('article') or soup.find('div', class_=re.compile(r'content|article|post'))
+    
+    if main_content:
+        text = main_content.get_text()
+    else:
+        text = soup.get_text()
+    
+    # Clean up text
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    text = ' '.join(chunk for chunk in chunks if chunk)
+    
+    return text
+
+def extract_wikipedia_content(url):
+    """Extract content from Wikipedia articles with better structure."""
+    # Convert to API format for cleaner extraction
+    page_title = url.split('/')[-1]
+    api_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{page_title}"
+    
+    try:
+        response = requests.get(api_url, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('extract', '') + '\n\n' + extract_general_webpage(url)
+    except:
+        pass
+    
+    return extract_general_webpage(url)
+
+def extract_youtube_transcript(url):
+    """Extract transcript from YouTube videos using youtube-transcript-api."""
+    try:
+        from youtube_transcript_api import YouTubeTranscriptApi
+        
+        # Extract video ID
+        if 'youtu.be' in url:
+            video_id = url.split('/')[-1].split('?')[0]
+        else:
+            parsed_url = urlparse(url)
+            video_id = parse_qs(parsed_url.query)['v'][0]
+        
+        # Get transcript
+        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        
+        # Combine transcript text
+        text = ' '.join([entry['text'] for entry in transcript])
+        return text
+        
+    except ImportError:
+        print("youtube-transcript-api not installed. Install with: pip install youtube-transcript-api")
+        return None
+    except Exception as e:
+        print(f"Error extracting YouTube transcript: {e}")
         return None
 
 def generate_flashcards(text_content):
@@ -58,30 +168,31 @@ def generate_flashcards(text_content):
     
     Please ensure the flashcards are well-structured and informative. Do not include any unnecessary information in the flashcards.
 
-    When you generate flashcards, ensure all the information within the pdf is accounted for and included in the flashcards.
+    When you generate flashcards, ensure all the information within the text is accounted for and included in the flashcards.
 
     Additionally, full sentences aren't required for the flashcards. The flashcards should be concise and to the point and clearly convey the information needed for effective studying.
 
-    Format your response as a JSON object with this structure:
+    IMPORTANT: Return ONLY valid JSON with NO additional text, comments, or explanations. Format your response as:
+
     {{
         "flashcards": [
             {{
-                "category": "category_name",  # Optional category for organization
-                "difficulty": "easy",  # Optional difficulty level
+                "category": "category_name",
+                "difficulty": "easy",
                 "type": "question_answer",
                 "question": "What is...",
                 "answer": "..."
             }},
             {{
-                "category": "category_name",  # Optional category for organization
-                "difficulty": "medium",  # Optional difficulty level
+                "category": "category_name",
+                "difficulty": "medium",
                 "type": "vocabulary",
                 "term": "...",
                 "definition": "..."
             }},
             {{
-                "category": "category_name",  # Optional category for organization
-                "difficulty": "hard",  # Optional difficulty level
+                "category": "category_name",
+                "difficulty": "hard",
                 "type": "fact",
                 "prompt": "...",
                 "content": "..."
@@ -104,6 +215,7 @@ def generate_flashcards(text_content):
         
         # Extract JSON from response
         response_text = response.content[0].text
+        print(f"Raw Claude response: {response_text[:500]}...")  # Debug output
         
         # Try to find and parse JSON in the response
         start_idx = response_text.find('{')
@@ -111,7 +223,26 @@ def generate_flashcards(text_content):
         
         if start_idx != -1 and end_idx != 0:
             json_str = response_text[start_idx:end_idx]
-            return json.loads(json_str)
+            
+            # Clean up common JSON formatting issues
+            json_str = json_str.replace('\n', ' ').replace('\r', ' ')
+            
+            # Try to parse JSON with better error handling
+            try:
+                return json.loads(json_str)
+            except json.JSONDecodeError as e:
+                print(f"JSON parsing error: {e}")
+                print(f"Problematic JSON around char {e.pos}: ...{json_str[max(0, e.pos-50):e.pos+50]}...")
+                
+                # Try to fix common issues and parse again
+                try:
+                    # Remove trailing commas before closing brackets/braces
+                    import re
+                    json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+                    return json.loads(json_str)
+                except json.JSONDecodeError:
+                    print("Failed to parse JSON even after cleanup")
+                    return None
         else:
             print("Could not find valid JSON in response")
             return None
@@ -328,13 +459,16 @@ def generate_hint(question, answer):
         return "Think about the key concepts from your study material."
 
 def main():
-    """Main function to process PDF and generate flashcards."""
+    """Main function to process PDF/URL and generate flashcards."""
     if len(sys.argv) < 2:
         print("Usage:")
-        print("  Generate flashcards: python main.py <path_to_pdf>")
+        print("  Generate flashcards from PDF: python main.py <path_to_pdf>")
+        print("  Generate flashcards from URL: python main.py <url>")
         print("  Study with chatbot: python main.py study <path_to_flashcard_json>")
         print("\nExamples:")
         print("  python main.py document.pdf")
+        print("  python main.py https://en.wikipedia.org/wiki/Machine_Learning")
+        print("  python main.py https://www.youtube.com/watch?v=VIDEO_ID")
         print("  python main.py study document_flashcards.json")
         sys.exit(1)
     
@@ -361,27 +495,48 @@ def main():
         chatbot_session(flashcards)
         
     else:
-        # PDF processing mode (existing functionality)
-        pdf_path = sys.argv[1]
+        # Content processing mode (PDF or URL)
+        input_source = sys.argv[1]
         
-        # Check if file exists
-        if not Path(pdf_path).exists():
-            print(f"Error: File '{pdf_path}' not found")
-            sys.exit(1)
+        # Determine if input is URL or file path
+        if input_source.startswith(('http://', 'https://')):
+            # URL processing mode
+            print(f"Processing URL: {input_source}")
+            
+            print("Extracting content from URL...")
+            text = extract_text_from_url(input_source)
+            
+            if not text:
+                print("Failed to extract content from URL")
+                sys.exit(1)
+                
+            print(f"Extracted {len(text)} characters from URL")
+            
+            # Create filename from URL
+            domain = urlparse(input_source).netloc.replace('.', '_')
+            output_path = f"{domain}_flashcards.json"
+            
+        else:
+            # PDF processing mode (existing functionality)
+            pdf_path = input_source
+            
+            if not Path(pdf_path).exists():
+                print(f"Error: File '{pdf_path}' not found")
+                sys.exit(1)
+            
+            print(f"Processing PDF: {pdf_path}")
+            
+            print("Extracting text from PDF...")
+            text = extract_text_from_pdf(pdf_path)
+            
+            if not text:
+                print("Failed to extract text from PDF")
+                sys.exit(1)
+                
+            print(f"Extracted {len(text)} characters from PDF")
+            output_path = Path(pdf_path).stem + "_flashcards.json"
         
-        print(f"Processing PDF: {pdf_path}")
-        
-        # Extract text from PDF
-        print("Extracting text from PDF...")
-        text = extract_text_from_pdf(pdf_path)
-        
-        if not text:
-            print("Failed to extract text from PDF")
-            sys.exit(1)
-        
-        print(f"Extracted {len(text)} characters from PDF")
-        
-        # Generate flashcards using Claude
+        # Generate flashcards using Claude (same for both sources)
         print("Generating flashcards with Claude AI...")
         flashcards = generate_flashcards(text)
         
@@ -392,7 +547,6 @@ def main():
         print(f"Generated {len(flashcards.get('flashcards', []))} flashcards")
         
         # Save flashcards to file
-        output_path = Path(pdf_path).stem + "_flashcards.json"
         save_flashcards(flashcards, output_path)
         
         # Also print to console
@@ -406,6 +560,24 @@ def main():
 async def check_answer_endpoint(question: str, correct_answer: str, user_answer: str):
     is_correct = check_answer(question, correct_answer, user_answer)
     return {"correct": is_correct}
+
+@app.post("/generate-from-url")
+async def generate_flashcards_from_url(request: URLRequest):
+    """API endpoint to generate flashcards from a URL."""
+    try:
+        print(f"Processing URL: {request.url}")
+        text = extract_text_from_url(request.url)
+        if not text:
+            raise HTTPException(status_code=400, detail="Failed to extract content from URL")
+        
+        print(f"Extracted {len(text)} characters from URL")
+        flashcards = generate_flashcards(text)
+        if not flashcards:
+            raise HTTPException(status_code=500, detail="Failed to generate flashcards")
+        
+        return flashcards
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing URL: {str(e)}")
 
 if __name__ == "__main__":
     main()

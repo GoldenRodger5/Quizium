@@ -236,6 +236,16 @@
             margin: 0 auto;
         }
 
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -272,6 +282,33 @@
                 </button>
             </div>
             <div id="uploadResult" class="hidden"></div>
+        </div>
+
+        <!-- URL Input Section -->
+        <div id="urlSection" class="card">
+            <h2>🌐 Generate from Web Content</h2>
+            <div style="margin-bottom: 20px;">
+                <p style="margin-bottom: 15px; font-size: 1.1em; text-align: center;">
+                    📖 Enter a URL to generate flashcards from web content
+                </p>
+                <p style="color: #666; margin-bottom: 20px; text-align: center;">
+                    Supported: Wikipedia articles, YouTube videos, web articles, blog posts
+                </p>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="url" id="urlInput" placeholder="https://en.wikipedia.org/wiki/Machine_Learning" 
+                           style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;">
+                    <button class="upload-btn" onclick="processURL()" id="urlBtn">
+                        🚀 Generate Flashcards
+                    </button>
+                </div>
+                <div style="margin-top: 10px; font-size: 14px; color: #666;">
+                    <strong>Examples:</strong><br>
+                    • https://en.wikipedia.org/wiki/Artificial_Intelligence<br>
+                    • https://www.youtube.com/watch?v=VIDEO_ID<br>
+                    • Any article or blog post URL
+                </div>
+            </div>
+            <div id="urlResult" class="hidden"></div>
         </div>
 
         <!-- Setup Section -->
@@ -413,6 +450,89 @@
             `;
             uploadResult.classList.remove('hidden');
         }
+
+        // URL processing functionality
+        async function processURL() {
+            const urlInput = document.getElementById('urlInput');
+            const urlBtn = document.getElementById('urlBtn');
+            const urlResult = document.getElementById('urlResult');
+            
+            const url = urlInput.value.trim();
+            if (!url) {
+                urlResult.innerHTML = `
+                    <div class="result incorrect">
+                        ❌ Please enter a valid URL
+                    </div>
+                `;
+                urlResult.classList.remove('hidden');
+                return;
+            }
+
+            // Validate URL format
+            try {
+                new URL(url);
+            } catch (e) {
+                urlResult.innerHTML = `
+                    <div class="result incorrect">
+                        ❌ Please enter a valid URL (must start with http:// or https://)
+                    </div>
+                `;
+                urlResult.classList.remove('hidden');
+                return;
+            }
+
+            urlBtn.disabled = true;
+            urlBtn.textContent = '🔄 Processing...';
+            urlResult.innerHTML = `
+                <div style="text-align: center; color: #666; padding: 20px;">
+                    <div class="loading-spinner"></div>
+                    <p>Extracting content from URL and generating flashcards...</p>
+                    <p style="font-size: 14px; margin-top: 10px;">This may take a few moments.</p>
+                </div>
+            `;
+            urlResult.classList.remove('hidden');
+
+            try {
+                const response = await fetch('/generate-from-url', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    currentFlashcards = result.flashcards;
+                    urlResult.innerHTML = `
+                        <div class="result correct">
+                            ✅ Successfully generated ${result.flashcards.length} flashcards from URL!
+                        </div>
+                    `;
+                    showSetupSection(result.flashcards.length);
+                } else {
+                    throw new Error(result.detail || 'Failed to process URL');
+                }
+            } catch (error) {
+                console.error('Error processing URL:', error);
+                urlResult.innerHTML = `
+                    <div class="result incorrect">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            } finally {
+                urlBtn.disabled = false;
+                urlBtn.textContent = '🚀 Generate Flashcards';
+            }
+        }
+
+        // Add Enter key support for URL input
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processURL();
+            }
+        });
 
         function showSetupSection(flashcardCount) {
             const flashcardInfo = document.getElementById('flashcardInfo');
