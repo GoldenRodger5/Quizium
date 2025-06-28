@@ -6,6 +6,7 @@ import anthropic
 import random
 import os
 from dotenv import load_dotenv
+from fastapi import FastAPI
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,6 +17,17 @@ if not CLAUDE_API_KEY:
     raise ValueError("CLAUDE_API_KEY not found in environment variables. Please check your .env file.")
 
 client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
+
+app = FastAPI()
+
+# Add this to handle HEAD requests
+@app.head("/")
+async def head_root():
+    return {}
+
+@app.get("/")
+async def root():
+    return {"message": "Flashcard API is running"}
 
 def extract_text_from_pdf(pdf_path):
     """Extract text content from a PDF file."""
@@ -389,6 +401,11 @@ def main():
         
         print(f"\n💡 To study with these flashcards, run:")
         print(f"python main.py study {output_path}")
+
+@app.post("/check-answer")
+async def check_answer_endpoint(question: str, correct_answer: str, user_answer: str):
+    is_correct = check_answer(question, correct_answer, user_answer)
+    return {"correct": is_correct}
 
 if __name__ == "__main__":
     main()
