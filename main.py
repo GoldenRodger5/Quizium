@@ -179,6 +179,8 @@ def generate_flashcards(text_content):
 
     Additionally, full sentences aren't required for the flashcards. The flashcards should be concise and to the point and clearly convey the information needed for effective studying.
 
+    When generating the question, please make it clear the question being asked, such as "What is...", "Define...", or "Explain...".
+
     IMPORTANT: Return ONLY valid JSON with NO additional text, comments, or explanations. Format your response as:
 
     {{
