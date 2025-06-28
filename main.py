@@ -128,19 +128,29 @@ def load_flashcards(json_path):
         return None
 
 def check_answer(question, correct_answer, user_answer):
-    """Check if user's answer is correct using Claude."""
+    """Check if user's answer is correct using Claude with more flexible evaluation."""
     prompt = f"""
-    Evaluate if the student's answer is correct for this study question.
-    Be strict but fair in your evaluation.
+    You are evaluating a student's answer to a study question. Be fair and flexible in your assessment.
     
     Question: {question}
-    Correct Answer: {correct_answer}
+    Expected Answer: {correct_answer}
     Student's Answer: {user_answer}
     
-    The student's answer should be considered correct ONLY if it demonstrates clear understanding of the concept and contains the essential information from the correct answer.
-    Minor wording differences are acceptable, but missing key points or incorrect information should be marked wrong.
+    Consider the student's answer CORRECT if:
+    - It demonstrates understanding of the core concept
+    - Contains the essential information, even if worded differently
+    - Is factually accurate in relation to the question
+    - Shows the student grasped the main point
     
-    Respond with ONLY one word: "CORRECT" or "INCORRECT"
+    Consider INCORRECT only if:
+    - The answer is factually wrong
+    - Shows fundamental misunderstanding
+    - Completely misses the point of the question
+    - Contains significant errors
+    
+    Use your knowledge to evaluate if the student's answer is reasonable and correct, even if it doesn't match the expected answer word-for-word. Different correct explanations or phrasings should be accepted.
+    
+    Respond with ONLY: "CORRECT" or "INCORRECT"
     """
     
     try:
@@ -154,10 +164,33 @@ def check_answer(question, correct_answer, user_answer):
         response_text = response.content[0].text.strip().upper()
         return "CORRECT" in response_text and "INCORRECT" not in response_text
     except:
-        # Fallback to simple string comparison
+        # Improved fallback logic
         user_lower = user_answer.lower().strip()
         correct_lower = correct_answer.lower().strip()
-        return user_lower == correct_lower or (len(user_lower) > 3 and user_lower in correct_lower)
+        
+        # Exact match
+        if user_lower == correct_lower:
+            return True
+            
+        # Check if user answer contains key concepts from correct answer
+        correct_words = set(correct_lower.split())
+        user_words = set(user_lower.split())
+        
+        # Remove common words that don't carry meaning
+        stop_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should'}
+        
+        meaningful_correct = correct_words - stop_words
+        meaningful_user = user_words - stop_words
+        
+        # If user answer contains most key concepts, consider it correct
+        if meaningful_correct and len(meaningful_user.intersection(meaningful_correct)) >= len(meaningful_correct) * 0.7:
+            return True
+            
+        # Check for partial matches (if user answer is contained in or contains correct answer)
+        if len(user_lower) > 5 and (user_lower in correct_lower or correct_lower in user_lower):
+            return True
+            
+        return False
 
 def chatbot_session(flashcards):
     """Interactive chatbot session using flashcards."""
