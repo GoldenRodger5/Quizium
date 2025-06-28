@@ -37,7 +37,7 @@ The **AI Flashcard Generator & Study Assistant** is a modern, full-stack web app
 
 ### 🌟 What Makes It Special
 
-- **AI-Powered Content Extraction**: Automatically generates high-quality flashcards from PDFs, Wikipedia articles, YouTube transcripts, and web content
+- **AI-Powered Content Extraction**: Automatically generates high-quality flashcards from PDFs, Wikipedia articles, and web content
 - **Intelligent Study Assistant**: Uses Claude AI for smart answer evaluation, hint generation, and adaptive learning
 - **Beautiful Interactive Interface**: 3D flip animations, responsive design, and smooth user experience
 - **Persistent Study Sessions**: Resume study sessions across browser tabs without losing progress
@@ -49,7 +49,7 @@ The **AI Flashcard Generator & Study Assistant** is a modern, full-stack web app
 
 ### 📚 Content Processing
 - **📄 PDF Processing**: Extract text from PDF documents and auto-generate flashcards
-- **🌐 Web Content Integration**: Support for Wikipedia articles, YouTube videos, and general web pages
+- **🌐 Web Content Integration**: Support for Wikipedia articles and general web pages
 - **📝 Manual Upload**: Import existing flashcard sets in JSON format
 - **🔄 Batch Processing**: Handle multiple content sources in a single session
 
@@ -96,7 +96,6 @@ The **AI Flashcard Generator & Study Assistant** is a modern, full-stack web app
 ### Data Processing
 - **[PyPDF2](https://pypdf2.readthedocs.io/)** - PDF text extraction
 - **[BeautifulSoup4](https://www.crummy.com/software/BeautifulSoup/)** - Web scraping and HTML parsing
-- **[youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api)** - YouTube transcript extraction
 - **[Requests](https://docs.python-requests.org/)** - HTTP client for web content fetching
 
 ### Development & Deployment
@@ -124,7 +123,7 @@ The **AI Flashcard Generator & Study Assistant** is a modern, full-stack web app
 
 ### Core Components
 
-1. **Content Processors**: Handle PDF extraction, web scraping, and YouTube transcripts
+1. **Content Processors**: Handle PDF extraction and web scraping
 2. **AI Integration**: Claude AI for flashcard generation, answer evaluation, and hints
 3. **Session Manager**: In-memory session storage with auto-recovery capabilities
 4. **API Layer**: RESTful endpoints for all frontend interactions
@@ -221,7 +220,6 @@ The application will be available at: **http://localhost:8000**
 1. Enter a URL in the **"Generate from Web Content"** section
 2. Supported sources:
    - **Wikipedia**: `https://en.wikipedia.org/wiki/Topic`
-   - **YouTube**: `https://www.youtube.com/watch?v=VIDEO_ID`
    - **Articles**: Any web page with readable content
 3. Click **"🚀 Generate Flashcards"**
 4. Processing time varies based on content length

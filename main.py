@@ -128,12 +128,11 @@ def extract_wikipedia_content(url):
     return extract_general_webpage(url)
 
 def extract_youtube_transcript(url):
-    """Extract transcript from YouTube videos using yt-dlp."""
+    """Extract transcript from YouTube videos using youtube-transcript-api."""
     try:
-        import yt_dlp
-        from urllib.parse import urlparse, parse_qs
+        from youtube_transcript_api import YouTubeTranscriptApi
         
-        # Extract video ID for logging
+        # Extract video ID
         if 'youtu.be' in url:
             video_id = url.split('/')[-1].split('?')[0]
         else:
@@ -142,118 +141,24 @@ def extract_youtube_transcript(url):
                 raise ValueError("Invalid YouTube URL: missing video ID")
             video_id = parse_qs(parsed_url.query)['v'][0]
         
-        print(f"Attempting to extract transcript for video ID: {video_id} using yt-dlp")
+        print(f"Attempting to extract transcript for video ID: {video_id}")
         
-        # Configure yt-dlp options
-        ydl_opts = {
-            'writesubtitles': True,
-            'writeautomaticsub': True,
-            'subtitleslangs': ['en', 'en-US', 'en-GB'],
-            'skip_download': True,
-            'quiet': True,
-            'no_warnings': True,
-            'extract_flat': False,
-        }
+        # Get transcript
+        transcript = YouTubeTranscriptApi.get_transcript(video_id)
         
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            # Extract video info including subtitles
-            info = ydl.extract_info(url, download=False)
-            
-            # Try to get subtitles in order of preference
-            subtitles = info.get('subtitles', {})
-            automatic_captions = info.get('automatic_captions', {})
-            
-            # Priority order: manual subtitles first, then automatic
-            subtitle_sources = [
-                ('manual', subtitles),
-                ('automatic', automatic_captions)
-            ]
-            
-            text_content = ""
-            subtitle_type = None
-            
-            for source_type, subs in subtitle_sources:
-                for lang in ['en', 'en-US', 'en-GB', 'en-us', 'en-gb']:
-                    if lang in subs:
-                        print(f"Found {source_type} subtitles in {lang}")
-                        subtitle_type = f"{source_type} ({lang})"
-                        
-                        # Get the subtitle URL (prefer vtt format)
-                        subtitle_formats = subs[lang]
-                        subtitle_url = None
-                        
-                        for fmt in subtitle_formats:
-                            if fmt.get('ext') == 'vtt':
-                                subtitle_url = fmt.get('url')
-                                break
-                        
-                        if not subtitle_url and subtitle_formats:
-                            # Fall back to first available format
-                            subtitle_url = subtitle_formats[0].get('url')
-                        
-                        if subtitle_url:
-                            # Download and parse subtitle content
-                            import requests
-                            response = requests.get(subtitle_url, timeout=10)
-                            response.raise_for_status()
-                            
-                            # Parse VTT content
-                            vtt_content = response.text
-                            text_content = parse_vtt_content(vtt_content)
-                            break
-                
-                if text_content:
-                    break
-            
-            if not text_content:
-                # If no subtitles found, try to get video description as fallback
-                description = info.get('description', '')
-                if description and len(description) > 100:
-                    print("No subtitles found, using video description as fallback")
-                    text_content = description
-                    subtitle_type = "description fallback"
-                else:
-                    raise Exception("No subtitles or usable content found for this video")
-            
-            print(f"Successfully extracted {len(text_content)} characters from YouTube {subtitle_type}")
-            return text_content
+        # Combine transcript text
+        text = ' '.join([entry['text'] for entry in transcript])
+        print(f"Successfully extracted {len(text)} characters from YouTube transcript")
+        return text
         
     except ImportError:
-        error_msg = "yt-dlp not installed. Install with: pip install yt-dlp"
+        error_msg = "youtube-transcript-api not installed. Install with: pip install youtube-transcript-api"
         print(error_msg)
         raise Exception(error_msg)
     except Exception as e:
-        error_msg = f"Error extracting YouTube content with yt-dlp: {e}"
+        error_msg = f"Error extracting YouTube transcript: {e}"
         print(error_msg)
         raise Exception(error_msg)
-
-def parse_vtt_content(vtt_content):
-    """Parse VTT subtitle content to extract text."""
-    import re
-    
-    # Remove VTT headers and timing information
-    lines = vtt_content.split('\n')
-    text_lines = []
-    
-    for line in lines:
-        line = line.strip()
-        # Skip empty lines, WEBVTT headers, timing lines, and style tags
-        if (not line or 
-            line.startswith('WEBVTT') or 
-            '-->' in line or 
-            line.startswith('NOTE') or
-            line.startswith('<') or
-            re.match(r'^\d+$', line)):
-            continue
-        
-        # Remove HTML tags and clean up text
-        text = re.sub(r'<[^>]+>', '', line)
-        text = text.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
-        
-        if text:
-            text_lines.append(text)
-    
-    return ' '.join(text_lines)
 
 def generate_flashcards(text_content):
     """Generate flashcards from text using Claude AI."""
@@ -626,7 +531,6 @@ def main():
         print("\nExamples:")
         print("  python main.py document.pdf")
         print("  python main.py https://en.wikipedia.org/wiki/Machine_Learning")
-        print("  python main.py https://www.youtube.com/watch?v=VIDEO_ID")
         print("  python main.py study document_flashcards.json")
         sys.exit(1)
     
