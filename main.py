@@ -164,7 +164,7 @@ def generate_flashcards(text_content):
     """Generate flashcards from text using Claude AI."""
     
     # Limit input text length to prevent token overflow
-    MAX_INPUT_LENGTH = 30000  # Roughly ~3000-4000 tokens
+    MAX_INPUT_LENGTH = 100000
     if len(text_content) > MAX_INPUT_LENGTH:
         print(f"⚠️  Input text is {len(text_content)} characters. Truncating to {MAX_INPUT_LENGTH} characters for better processing.")
         text_content = text_content[:MAX_INPUT_LENGTH] + "..."
