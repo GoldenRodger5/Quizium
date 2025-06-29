@@ -1720,32 +1720,6 @@
             }
         }
 
-        function showSetupSection(flashcardCount) {
-            // Store flashcards data and switch to study tab
-            const flashcardInfo = document.getElementById('flashcardInfo');
-            flashcardInfo.innerHTML = `
-                <div style="text-align: center; padding: 15px; background: #f0f8ff; border-radius: 8px; margin-bottom: 20px;">
-                    <span style="font-size: 18px;">✅</span>
-                    <strong>Ready to study!</strong><br>
-                    <span style="color: #666;">${flashcardCount} flashcards loaded</span>
-                </div>
-            `;
-            
-            // Update the study input max values - always based on full flashcard count
-            // Study sessions are independent of flashcard tab filtering
-            document.getElementById('numQuestions').max = flashcardCount;
-            document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
-            
-            // Load filters
-            loadFilters();
-            
-            // Switch to study tab and show setup
-            showTab('study');
-            document.getElementById('setupSection').classList.remove('hidden');
-            document.getElementById('studySessionSection').classList.add('hidden');
-            document.getElementById('studyResultsSection').classList.add('hidden');
-        }
-
         // Study mode functions for the study tab
         async function startStudySession() {
             // Study sessions always use the full set of flashcards (currentFlashcards),
