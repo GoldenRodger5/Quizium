@@ -1489,8 +1489,12 @@
             } catch (error) {
                 showUploadError('Failed to upload file: ' + error.message);
             } finally {
-                // Re-enable file input
-                document.getElementById('fileInput').disabled = false;
+                // Re-enable file input and reset its value
+                const fileInputElement = document.getElementById('fileInput');
+                if (fileInputElement) {
+                    fileInputElement.disabled = false;
+                    fileInputElement.value = ''; // Reset file input to allow selecting the same file again
+                }
                 if (uploadArea) {
                     uploadArea.style.pointerEvents = '';
                     uploadArea.style.opacity = '';
