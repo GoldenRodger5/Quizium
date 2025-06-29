@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <!-- iOS PWA Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Quizium">
@@ -120,7 +121,7 @@
             padding: 12px 8px;
             background: transparent;
             border: none;
-            color: white;
+            color: #4a5568;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -128,9 +129,14 @@
             font-weight: 500;
         }
 
-        .tab-btn.active {
-            background: white;
+        .tab-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
             color: #667eea;
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
@@ -849,69 +855,6 @@
                 font-size: 14px;
             }
         }
-            }
-
-            .flashcard {
-                height: 200px;
-                max-width: 100%;
-            }
-
-            .flashcard-front,
-            .flashcard-back {
-                padding: 15px;
-            }
-
-            .card-content {
-                font-size: 14px;
-                max-height: 140px;
-            }
-
-            .card-type {
-                font-size: 11px;
-                margin-bottom: 8px;
-            }
-
-            .nav-btn {
-                padding: 6px 8px;
-                font-size: 11px;
-            }
-
-            #cardCounter {
-                font-size: 13px;
-            }
-
-            .question-text {
-                font-size: 16px;
-                margin: 12px 0;
-            }
-
-            .answer-input {
-                padding: 10px;
-                font-size: 16px;
-                min-height: 60px;
-            }
-
-            .url-input-row {
-                flex-direction: column;
-            }
-
-            .url-examples {
-                font-size: 12px;
-            }
-
-            .study-input-row {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .flashcard-controls {
-                gap: 5px;
-            }
-
-            .study-controls {
-                gap: 5px;
-            }
-        }
 
         @media (max-width: 480px) {
             .container {
@@ -1009,22 +952,23 @@
             </button>
         </div>
         
-        <!-- Mobile Tab Navigation -->
+        <!-- Tab Navigation -->
         <div class="tab-container">
             <div class="tab-nav">
-                <button class="tab-btn active" onclick="showTab('upload')">📚 Upload</button>
-                <button class="tab-btn" onclick="showTab('study')">🎯 Study</button>
-                <button class="tab-btn" onclick="showTab('browse')">📖 Browse</button>
+                <button class="tab-btn active" onclick="showTab('generate')">Generate</button>
+                <button class="tab-btn" onclick="showTab('flashcards')">Flashcards</button>
+                <button class="tab-btn" onclick="showTab('study')">Study</button>
+                <button class="tab-btn" onclick="showTab('training')">Training Assistant</button>
             </div>
         </div>
 
-        <!-- Upload Tab -->
-        <div id="uploadTab" class="tab-content active">
+        <!-- Generate Tab -->
+        <div id="generateTab" class="tab-content active">
             <!-- File Upload Section -->
             <div class="card">
-                <h2>� Upload Study Material</h2>
+                <h2>📄 Upload Study Material</h2>
                 <div class="upload-area" id="uploadArea">
-                    <p style="margin-bottom: 15px; font-size: 1.1em;">📄 Drag and drop your file here, or click to browse</p>
+                    <p style="margin-bottom: 15px; font-size: 1.1em;">Drag and drop your file here, or click to browse</p>
                     <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Supported: PDF, DOC, DOCX (generate flashcards) or JSON (existing flashcards)</p>
                     <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.json">
                     <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
@@ -1039,7 +983,7 @@
                 <h2>🌐 Generate from Web Content</h2>
                 <div class="url-input-container">
                     <p style="margin-bottom: 15px; font-size: 1.1em; text-align: center;">
-                        📖 Enter a URL to generate flashcards from web content
+                        Enter a URL to generate flashcards from web content
                     </p>
                     <p style="color: #666; margin-bottom: 15px; text-align: center; font-size: 14px;">
                         Supported: Wikipedia articles, web articles, blog posts
@@ -1048,7 +992,7 @@
                         <input type="url" id="urlInput" placeholder="https://en.wikipedia.org/wiki/Machine_Learning" 
                                style="flex: 1; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px;">
                         <button class="upload-btn" onclick="processURL()" id="urlBtn">
-                            🚀 Generate
+                            Generate
                         </button>
                     </div>
                     <div class="url-examples">
@@ -1061,16 +1005,15 @@
             </div>
         </div>
 
-        <!-- Study Tab -->
-        <div id="studyTab" class="tab-content">
-            <!-- Setup Section -->
-            <div id="setupSection" class="card">
-                <h2>⚙️ Study Setup</h2>
-                <div id="flashcardInfo"></div>
+        <!-- Flashcards Tab -->
+        <div id="flashcardsTab" class="tab-content">
+            <!-- Flashcard Browse Section -->
+            <div class="card">
+                <h2>📚 Browse Your Flashcards</h2>
                 
                 <!-- Filters Section -->
                 <div id="filtersSection" class="hidden" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                    <h3 style="margin-bottom: 15px;">📋 Filter Flashcards</h3>
+                    <h3 style="margin-bottom: 15px;">Filter Flashcards</h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                         <div>
                             <label for="categoryFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Category:</label>
@@ -1093,6 +1036,66 @@
                     </div>
                     <div id="filterResults" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
                 </div>
+
+                <div class="flashcard-navigation">
+                    <button class="nav-btn" onclick="previousCard()" id="prevBtn">← Previous</button>
+                    <span id="cardCounter">1 / 10</span>
+                    <button class="nav-btn" onclick="nextCard()" id="nextBtn">Next →</button>
+                </div>
+                
+                <div class="flashcard-container">
+                    <div class="flashcard" id="currentFlashcard" onclick="flipCard()">
+                        <div class="flashcard-front" id="cardFront">
+                            <div class="card-type" id="cardType">Question</div>
+                            <div class="card-content" id="cardQuestion">Generate flashcards first to browse them</div>
+                        </div>
+                        <div class="flashcard-back" id="cardBack">
+                            <div class="card-type">Answer</div>
+                            <div class="card-content" id="cardAnswer">Answer will appear here</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flashcard-controls">
+                    <button class="btn btn-secondary" onclick="flipCard()">Flip Card</button>
+                    <button class="btn" onclick="shuffleFlashcards()">Shuffle</button>
+                    <button class="btn" onclick="showTab('study')">Start Study Session</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Tab -->
+        <div id="studyTab" class="tab-content">
+            <!-- Setup Section -->
+            <div id="setupSection" class="card">
+                <h2>⚙️ Study Setup</h2>
+                <div id="flashcardInfo"></div>
+                
+                <!-- Filters Section -->
+                <div id="studyFiltersSection" class="hidden" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="margin-bottom: 15px;">Filter Questions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div>
+                            <label for="studyCategoryFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Category:</label>
+                            <select id="studyCategoryFilter" class="filter-select" onchange="applyStudyFilters()">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="studyDifficultyFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Difficulty:</label>
+                            <select id="studyDifficultyFilter" class="filter-select" onchange="applyStudyFilters()">
+                                <option value="all">All Difficulties</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="studyTypeFilter" style="display: block; margin-bottom: 5px; font-weight: bold;">Type:</label>
+                            <select id="studyTypeFilter" class="filter-select" onchange="applyStudyFilters()">
+                                <option value="all">All Types</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="studyFilterResults" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+                </div>
                 
                 <div style="text-align: center; margin: 20px 0;">
                     <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
@@ -1100,7 +1103,7 @@
                            style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
                 </div>
                 <div style="text-align: center;">
-                    <button class="btn" onclick="startStudySession()">🎯 Start Study Session</button>
+                    <button class="btn" onclick="startStudySession()">Start Study Session</button>
                 </div>
             </div>
 
@@ -1121,12 +1124,13 @@
                     <input type="text" id="answerInput" class="answer-input" placeholder="Type your answer here..." autocomplete="off">
                     <div class="action-buttons">
                         <button class="action-btn btn-primary" onclick="submitAnswer()">Submit Answer</button>
-                        <button class="action-btn btn-hint" onclick="getHint()">� Hint</button>
+                        <button class="action-btn btn-hint" onclick="getHint()">Hint</button>
                         <button class="action-btn btn-secondary" onclick="skipQuestion()">Skip</button>
                     </div>
                 </div>
 
                 <div id="answerFeedback" class="hidden"></div>
+                <div id="hintContainer" class="hidden"></div>
                 
                 <div style="text-align: center; margin-top: 20px;">
                     <button class="action-btn btn-secondary" onclick="endStudySession()">End Session</button>
@@ -1138,121 +1142,21 @@
                 <h2>📊 Study Results</h2>
                 <div id="studyResults"></div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn" onclick="startNewStudySession()">🔄 Start New Session</button>
-                    <button class="btn" onclick="showTab('browse')">📖 Browse Flashcards</button>
+                    <button class="btn" onclick="startNewStudySession()">Start New Session</button>
+                    <button class="btn" onclick="showTab('flashcards')">Browse Flashcards</button>
                 </div>
             </div>
         </div>
 
-        <!-- Browse Tab -->
-        <div id="browseTab" class="tab-content">
-            <!-- Flashcards View Section -->
-            <div id="flashcardsViewSection" class="card">
-                <h2>📚 Your Flashcards</h2>
-            
-            <!-- Tab Navigation -->
-            <div class="tab-container">
-                <button class="tab-button active" onclick="switchTab('browse')">📖 Browse Cards</button>
-                <button class="tab-button" onclick="switchTab('study')" id="studyTabButton">🎯 Study Mode</button>
-            </div>
-
-            <!-- Browse Cards Tab -->
-            <div id="browseTab" class="tab-content active">
-                <div class="flashcard-navigation">
-                    <button class="nav-btn" onclick="previousCard()" id="prevBtn">⬅️ Previous</button>
-                    <span id="cardCounter">1 / 10</span>
-                    <button class="nav-btn" onclick="nextCard()" id="nextBtn">Next ➡️</button>
+        <!-- Training Assistant Tab -->
+        <div id="trainingTab" class="tab-content">
+            <div class="card">
+                <h2>🤖 Training Assistant</h2>
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <h3>Coming Soon!</h3>
+                    <p>The Training Assistant feature is under development.</p>
+                    <p>This will provide personalized AI coaching based on your study performance.</p>
                 </div>
-                
-                <div class="flashcard-container">
-                    <div class="flashcard" id="currentFlashcard" onclick="flipCard()">
-                        <div class="flashcard-front" id="cardFront">
-                            <div class="card-type" id="cardType">Question</div>
-                            <div class="card-content" id="cardQuestion">Click to load flashcards</div>
-                        </div>
-                        <div class="flashcard-back" id="cardBack">
-                            <div class="card-type">Answer</div>
-                            <div class="card-content" id="cardAnswer">Answer will appear here</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flashcard-controls">
-                    <button class="btn btn-secondary" onclick="flipCard()">🔄 Flip</button>
-                    <button class="btn" onclick="switchTab('study')">🎯 Study</button>
-                    <button class="btn" onclick="restartStudySession(); switchTab('study');" style="background: #e53e3e;" onmouseover="this.style.background='#c53030'" onmouseout="this.style.background='#e53e3e'">🔄 Restart</button>
-                </div>
-            </div>
-
-            <!-- Study Mode Tab -->
-            <div id="studyTab" class="tab-content hidden">
-                <div class="study-input-container">
-                    <label for="studyNumQuestions" style="font-weight: bold; text-align: center;">How many questions?</label>
-                    <div class="study-input-row">
-                        <input type="number" id="studyNumQuestions" min="1" value="10">
-                        <button class="btn" onclick="startStudyMode()">🎯 Start Study</button>
-                    </div>
-                </div>
-                
-                <div id="studyProgressContainer" class="hidden">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="studyProgressFill"></div>
-                    </div>
-                    <div class="score" id="studyScoreDisplay">Score: 0/0</div>
-                </div>
-                
-                <div id="studyQuestionContainer" class="hidden">
-                    <div id="studyQuestionInfo" class="question-info"></div>
-                    <div id="studyQuestionText" class="question-text"></div>
-                    
-                    <div id="studyAnswerSection">
-                        <textarea id="studyAnswerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
-                        <div class="study-controls">
-                            <button class="btn" onclick="submitStudyAnswer()">✅ Submit</button>
-                            <button class="btn btn-hint" onclick="getStudyHint()">💡 Hint</button>
-                            <button class="btn btn-secondary" onclick="skipStudyQuestion()">⏭️ Skip</button>
-                        </div>
-                    </div>
-                    
-                    <div id="studyHintContainer" class="hidden"></div>
-                    <div id="studyResultContainer" class="hidden"></div>
-                    
-                    <div id="studyNextQuestionSection" class="hidden" style="text-align: center; margin-top: 15px;">
-                        <button class="btn" onclick="loadNextQuestion('study')">➡️ Next Question</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Study Section -->
-        <div id="studySection" class="card hidden">
-            <div id="progressContainer">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="score" id="scoreDisplay">Score: 0/0</div>
-            </div>
-            
-            <div id="questionContainer">
-                <div id="questionInfo" class="question-info"></div>
-                <div id="questionText" class="question-text"></div>
-                
-                <div id="answerSection">
-                    <textarea id="answerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
-                    <div class="study-controls">
-                        <button class="btn" onclick="submitAnswer()">✅ Submit</button>
-                        <button class="btn btn-hint" onclick="getHint()">💡 Hint</button>
-                        <button class="btn btn-secondary" onclick="skipQuestion()">⏭️ Skip</button>
-                    </div>
-                </div>
-                
-                <div id="hintContainer" class="hidden"></div>
-                <div id="resultContainer" class="hidden"></div>
-            </div>
-            
-            <div id="nextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
-                <button class="btn" onclick="nextQuestion()">➡️ Next Question</button>
-            </div>
             </div>
         </div>
 
@@ -1260,7 +1164,7 @@
         <div id="resultsSection" class="card hidden">
             <div id="finalResults"></div>
             <div style="text-align: center; margin-top: 20px;">
-                <button class="btn" onclick="startOver()">🔄 Start Over</button>
+                <button class="btn" onclick="startOver()">Start Over</button>
             </div>
         </div>
 
@@ -1271,8 +1175,6 @@
                 <p style="margin-top: 15px;">Processing your file...</p>
             </div>
         </div>
-        
-        </div> <!-- Close browse tab -->
         
     </div> <!-- Close container -->
 
@@ -1288,28 +1190,232 @@
         let studySessionComplete = false;
         let studyResults = null;
 
-        // File upload functionality
+        // Global Variables
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+        let currentCardIndex = 0;
+        
+        // DOM Elements
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
+        
+        // PWA Variables
+        let deferredPrompt;
 
-        uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
+        // Utility Functions
+        function showMessage(message, type = 'info') {
+            // Create message element if it doesn't exist
+            let messageEl = document.getElementById('globalMessage');
+            if (!messageEl) {
+                messageEl = document.createElement('div');
+                messageEl.id = 'globalMessage';
+                messageEl.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    z-index: 10000;
+                    min-width: 250px;
+                    max-width: 400px;
+                    word-wrap: break-word;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+                document.body.appendChild(messageEl);
             }
-        });
+            
+            // Style based on type
+            const styles = {
+                success: { background: '#38a169', color: 'white', border: '2px solid #2f855a' },
+                error: { background: '#e53e3e', color: 'white', border: '2px solid #c53030' },
+                warning: { background: '#d69e2e', color: 'white', border: '2px solid #b7791f' },
+                info: { background: '#3182ce', color: 'white', border: '2px solid #2c5aa0' }
+            };
+            
+            const style = styles[type] || styles.info;
+            Object.assign(messageEl.style, style);
+            messageEl.textContent = message;
+            
+            // Show message
+            setTimeout(() => {
+                messageEl.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Hide message after 4 seconds
+            setTimeout(() => {
+                messageEl.style.transform = 'translateX(100%)';
+            }, 4000);
+        }
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
+        function showTab(tabName) {
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab button
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            const tabId = tabName + 'Tab';
+            const selectedTab = document.getElementById(tabId);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
+            
+            // Special handling for flashcards tab
+            if (tabName === 'flashcards' && currentFlashcards && currentFlashcards.length > 0) {
+                loadFilters();
+                updateFlashcard();
+            }
+            
+            // Special handling for study tab
+            if (tabName === 'study' && currentFlashcards && currentFlashcards.length > 0) {
+                showSetupSection(currentFlashcards.length);
+            }
+        }
+
+        function showUploadSuccess(result) {
+            const uploadResult = document.getElementById('uploadResult');
+            uploadResult.innerHTML = `
+                <div class="success-message">
+                    <h3>✅ Upload Successful!</h3>
+                    <p>Generated <strong>${result.flashcard_count}</strong> flashcards</p>
+                    <p>You can now start studying or browse your flashcards</p>
+                </div>
+            `;
+            uploadResult.classList.remove('hidden');
+            showMessage(`Successfully generated ${result.flashcard_count} flashcards!`, 'success');
+        }
+
+        function showUploadError(error) {
+            const uploadResult = document.getElementById('uploadResult');
+            uploadResult.innerHTML = `
+                <div class="error-message">
+                    <h3>❌ Upload Failed</h3>
+                    <p>${error}</p>
+                </div>
+            `;
+            uploadResult.classList.remove('hidden');
+            showMessage('Upload failed: ' + error, 'error');
+        }
+
+        function showSetupSection(flashcardCount) {
+            // Load filters for the flashcards
+            loadFilters();
+            
+            document.getElementById('flashcardInfo').innerHTML = `
+                <div class="flashcard-stats">
+                    <h3>📚 Ready to Study!</h3>
+                    <p>You have <strong>${flashcardCount}</strong> flashcards available</p>
+                </div>
+            `;
+            
+            // Update max questions
+            const numQuestionsInput = document.getElementById('numQuestions');
+            numQuestionsInput.max = flashcardCount;
+            numQuestionsInput.value = Math.min(10, flashcardCount);
+            
+            // Show the setup section within the study tab
+            document.getElementById('setupSection').classList.remove('hidden');
+            document.getElementById('studySessionSection').classList.add('hidden');
+            document.getElementById('studyResultsSection').classList.add('hidden');
+        }
+
+        function shuffleFlashcards() {
+            if (!currentFlashcards || currentFlashcards.length === 0) {
+                showMessage('No flashcards to shuffle', 'warning');
+                return;
+            }
+            
+            // Fisher-Yates shuffle algorithm
+            for (let i = currentFlashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentFlashcards[i], currentFlashcards[j]] = [currentFlashcards[j], currentFlashcards[i]];
+            }
+            
+            // Reset to first card and update display
+            currentCardIndex = 0;
+            updateFlashcard();
+            showMessage('Flashcards shuffled!', 'success');
+        }
+
+        // Utility function to safely get elements
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Element with id '${id}' not found`);
+            }
+            return element;
+        }
+
+        // Error handling wrapper
+        function safeExecute(fn, errorMessage = 'An error occurred') {
+            try {
+                return fn();
+            } catch (error) {
+                console.error(errorMessage, error);
+                showMessage(errorMessage, 'error');
+                return null;
+            }
+        }
+
+        // Initialize event listeners when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize upload functionality
+            if (uploadArea && fileInput) {
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        handleFile(files[0]);
+                    }
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        handleFile(e.target.files[0]);
+                    }
+                });
+            }
+
+            // Initialize answer input event listener
+            const answerInput = document.getElementById('answerInput');
+            if (answerInput) {
+                answerInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        submitAnswer();
+                    }
+                });
+            }
+
+            // Initialize PWA
+            initializePWA();
+            
+            // URL input Enter key support
+            const urlInput = document.getElementById('urlInput');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        processURL();
+                    }
+                });
             }
         });
 
@@ -1339,7 +1445,7 @@
                     showingResult = false;
                     
                     showUploadSuccess(result);
-                    showSetupSection(result.flashcard_count);
+                    showTab('flashcards'); // Switch to flashcards tab after successful generation
                 } else {
                     showUploadError(result.error);
                 }
@@ -1437,7 +1543,7 @@
                             ✅ Successfully generated ${result.flashcards.length} flashcards from URL!
                         </div>
                     `;
-                    showSetupSection(result.flashcards.length);
+                    showTab('flashcards'); // Switch to flashcards tab after successful generation
                 } else {
                     throw new Error(result.detail || 'Failed to process URL');
                 }
@@ -1453,13 +1559,6 @@
                 urlBtn.textContent = '🚀 Generate Flashcards';
             }
         }
-
-        // Add Enter key support for URL input
-        document.getElementById('urlInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                processURL();
-            }
-        });
 
         function showSetupSection(flashcardCount) {
             // Store flashcards data and switch to study tab
@@ -1486,31 +1585,24 @@
             document.getElementById('studyResultsSection').classList.add('hidden');
         }
 
+        // Study mode functions for the study tab
         async function startStudySession() {
-            // Redirect to the tabbed study interface instead of standalone
-            showFlashcardsView();
-            switchTab('study');
-        }
-
-        // New function for starting study mode from the tabbed interface
-        async function startStudyMode() {
-            console.log('🔍 startStudyMode called');
-            console.log('🔍 currentSessionId:', currentSessionId);
+            // Direct to study session functionality
+            console.log('Starting study session, currentSessionId:', currentSessionId);
             
             if (!currentSessionId) {
                 alert('No flashcards session available. Please generate flashcards first.');
                 return;
             }
 
-            const numQuestions = parseInt(document.getElementById('studyNumQuestions').value);
-            console.log('🔍 numQuestions:', numQuestions);
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+            console.log('Number of questions:', numQuestions);
             
             try {
                 const requestBody = {
                     session_id: currentSessionId,
                     num_questions: numQuestions
                 };
-                console.log('🔍 Sending request body:', requestBody);
                 
                 const response = await fetch('/start_session', {
                     method: 'POST',
@@ -1520,9 +1612,7 @@
                     body: JSON.stringify(requestBody)
                 });
 
-                console.log('🔍 Response status:', response.status);
                 const result = await response.json();
-                console.log('🔍 Response result:', result);
 
                 if (response.ok) {
                     currentStudySessionId = result.study_session_id;
@@ -1530,31 +1620,34 @@
                     studySessionComplete = false;
                     studyResults = null;
                     showingResult = false;
-                    updateStudyTabStatus();
                     
-                    // Show the progress and question containers in study tab
-                    document.getElementById('studyProgressContainer').classList.remove('hidden');
-                    document.getElementById('studyQuestionContainer').classList.remove('hidden');
+                    // Set the total questions count in the UI
+                    const totalQuestionsSpan = document.getElementById('totalQuestions');
+                    if (totalQuestionsSpan) {
+                        totalQuestionsSpan.textContent = numQuestions;
+                    }
                     
-                    // Load the first question for study mode
-                    loadNextQuestion('study');
+                    // Show the study session section
+                    document.getElementById('setupSection').classList.add('hidden');
+                    document.getElementById('studySessionSection').classList.remove('hidden');
+                    document.getElementById('studyResultsSection').classList.add('hidden');
+                    
+                    // Load the first question
+                    loadNextQuestion();
                 } else {
-                    console.error('🔍 Error response:', result);
                     if (result.detail && result.detail.includes('Session expired')) {
-                        console.log('🔄 Attempting to recreate session...');
                         // Try to recreate the session automatically
                         const sessionRecreated = await recreateSessionIfNeeded();
                         if (sessionRecreated) {
                             // Retry starting the study session
-                            console.log('🔄 Retrying study session with new session...');
-                            await startStudyMode();
+                            await startStudySession();
                             return;
                         } else {
                             // Fallback to manual regeneration
                             if (confirm('Your session has expired (server was restarted). Would you like to regenerate your flashcards?')) {
                                 currentSessionId = null;
                                 currentFlashcards = [];
-                                showSection('uploadSection');
+                                showTab('generate');
                             }
                         }
                     } else {
@@ -1562,12 +1655,13 @@
                     }
                 }
             } catch (error) {
-                console.error('🔍 Error in startStudyMode:', error);
                 alert('Failed to start study session: ' + error.message);
             }
         }
 
         async function loadNextQuestion(mode = 'normal') {
+            console.log('Loading next question, currentStudySessionId:', currentStudySessionId);
+            
             try {
                 const response = await fetch('/get_question', {
                     method: 'POST',
@@ -1580,79 +1674,52 @@
                 });
 
                 const result = await response.json();
+                console.log('Get question response:', result);
 
                 if (response.ok) {
                     if (result.complete) {
-                        if (mode === 'study') {
-                            showStudyFinalResults(result);
-                        } else {
-                            showFinalResults(result);
-                        }
+                        showFinalResults(result);
                     } else {
                         currentQuestionData = result;
                         displayQuestion(result, mode);
                         showingResult = false;
                     }
                 } else {
+                    console.error('Error response:', result);
                     alert('Error: ' + (result.error || result.detail));
                 }
             } catch (error) {
+                console.error('Failed to load question:', error);
                 alert('Failed to load question: ' + error.message);
             }
         }
 
         function displayQuestion(questionData, mode = 'normal') {
-            // Determine which elements to update based on mode
-            const progressFill = mode === 'study' ? 
-                document.getElementById('studyProgressFill') : 
-                document.getElementById('progressFill');
-            const scoreDisplay = mode === 'study' ? 
-                document.getElementById('studyScoreDisplay') : 
-                document.getElementById('scoreDisplay');
-            const questionInfo = mode === 'study' ? 
-                document.getElementById('studyQuestionInfo') : 
-                document.getElementById('questionInfo');
-            const questionText = mode === 'study' ? 
-                document.getElementById('studyQuestionText') : 
-                document.getElementById('questionText');
-            const answerInput = mode === 'study' ? 
-                document.getElementById('studyAnswerInput') : 
-                document.getElementById('answerInput');
-            const hintContainer = mode === 'study' ? 
-                document.getElementById('studyHintContainer') : 
-                document.getElementById('hintContainer');
-            const resultContainer = mode === 'study' ? 
-                document.getElementById('studyResultContainer') : 
-                document.getElementById('resultContainer');
-            const answerSection = mode === 'study' ? 
-                document.getElementById('studyAnswerSection') : 
-                document.getElementById('answerSection');
-            const nextQuestionSection = mode === 'study' ? 
-                document.getElementById('studyNextQuestionSection') : 
-                document.getElementById('nextQuestionSection');
-
             // Update progress
-            const progress = (questionData.question_number - 1) / questionData.total_questions * 100;
-            progressFill.style.width = progress + '%';
-            scoreDisplay.textContent = 
-                `Score: ${questionData.current_score}/${questionData.question_number - 1} | Question ${questionData.question_number}/${questionData.total_questions}`;
+            const progressBar = document.getElementById('progressBar');
+            const currentQuestionNum = document.getElementById('currentQuestionNum');
+            const totalQuestionsSpan = document.getElementById('totalQuestions');
+            const currentQuestion = document.getElementById('currentQuestion');
+            const answerInput = document.getElementById('answerInput');
+            const answerFeedback = document.getElementById('answerFeedback');
 
-            // Display question info
-            questionInfo.innerHTML = `
-                <strong>Category:</strong> ${questionData.category} | 
-                <strong>Difficulty:</strong> ${questionData.difficulty}
-            `;
-
-            // Display question
-            questionText.textContent = questionData.question;
-
-            // Reset UI
-            answerInput.value = '';
-            answerInput.disabled = false;
-            hintContainer.classList.add('hidden');
-            resultContainer.classList.add('hidden');
-            answerSection.classList.remove('hidden');
-            nextQuestionSection.classList.add('hidden');
+            if (progressBar) {
+                const progress = (questionData.question_number / questionData.total_questions) * 100;
+                progressBar.style.width = progress + '%';
+            }
+            
+            if (currentQuestionNum) currentQuestionNum.textContent = questionData.question_number;
+            if (totalQuestionsSpan) totalQuestionsSpan.textContent = questionData.total_questions;
+            if (currentQuestion) currentQuestion.textContent = questionData.question;
+            
+            // Reset input and feedback
+            if (answerInput) {
+                answerInput.value = '';
+                answerInput.disabled = false;
+            }
+            if (answerFeedback) {
+                answerFeedback.classList.add('hidden');
+            }
         }
 
         async function submitAnswer() {
@@ -1693,18 +1760,9 @@
         }
 
         function showResult(result, mode = 'normal') {
-            const resultContainer = mode === 'study' ? 
-                document.getElementById('studyResultContainer') : 
-                document.getElementById('resultContainer');
-            const answerInput = mode === 'study' ? 
-                document.getElementById('studyAnswerInput') : 
-                document.getElementById('answerInput');
-            const answerSection = mode === 'study' ? 
-                document.getElementById('studyAnswerSection') : 
-                document.getElementById('answerSection');
-            const nextQuestionSection = mode === 'study' ? 
-                document.getElementById('studyNextQuestionSection') : 
-                document.getElementById('nextQuestionSection');
+            // Use the answerFeedback element for showing results in study session
+            const resultContainer = document.getElementById('answerFeedback');
+            const answerInput = document.getElementById('answerInput');
             
             let resultHTML = '';
             if (result.skipped) {
@@ -1722,17 +1780,22 @@
             }
             
             resultHTML += `
-                <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px; color: #2d3748;">
                     <strong>📖 Correct Answer:</strong> ${result.correct_answer}
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn" onclick="loadNextQuestion()">Next Question</button>
                 </div>
             `;
             
-            resultContainer.innerHTML = resultHTML;
-            resultContainer.classList.remove('hidden');
+            if (resultContainer) {
+                resultContainer.innerHTML = resultHTML;
+                resultContainer.classList.remove('hidden');
+            }
             
-            answerInput.disabled = true;
-            if (answerSection) answerSection.classList.add('hidden');
-            if (nextQuestionSection) nextQuestionSection.classList.remove('hidden');
+            if (answerInput) {
+                answerInput.disabled = true;
+            }
         }
 
         async function getHint() {
@@ -1778,20 +1841,21 @@
                 })
             }).then(response => response.json())
               .then(result => {
-                  const resultContainer = document.getElementById('resultContainer');
+                  const resultContainer = document.getElementById('answerFeedback');
                   resultContainer.innerHTML = `
                       <div class="result" style="background: #fef5e7; color: #744210; border-color: #ed8936;">
                           ⏭️ Question Skipped
                       </div>
-                      <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                      <div style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-top: 10px; color: #2d3748;">
                           <strong>📖 Correct Answer:</strong> ${result.correct_answer}
+                      </div>
+                      <div style="text-align: center; margin-top: 15px;">
+                          <button class="btn" onclick="loadNextQuestion()">Next Question</button>
                       </div>
                   `;
                   resultContainer.classList.remove('hidden');
                   
                   document.getElementById('answerInput').disabled = true;
-                  document.getElementById('answerSection').classList.add('hidden');
-                  document.getElementById('nextQuestionSection').classList.remove('hidden');
                   showingResult = true;
               });
         }
@@ -1837,137 +1901,142 @@
                 </div>
             `;
             
-            showSection('resultsSection');
+            // Hide study session section and show results
+            document.getElementById('studySessionSection').classList.add('hidden');
+            document.getElementById('studyResultsSection').classList.remove('hidden');
+            document.getElementById('studyResults').innerHTML = finalResults.innerHTML;
         }
 
-        function showStudyFinalResults(results) {
-            // Store results and update session state
-            studyResults = results;
-            studySessionActive = false;
-            studySessionComplete = true;
-            updateStudyTabStatus();
-            
-            displayStudyResults();
-        }
-
-        function displayStudyResults() {
-            // For study mode within the flashcards view, show results in the study tab
-            const studyTab = document.getElementById('studyTab');
-            
-            let emoji = '';
-            let message = '';
-            if (studyResults.percentage >= 90) {
-                emoji = '🌟';
-                message = 'Excellent work! You\'ve mastered this material!';
-            } else if (studyResults.percentage >= 80) {
-                emoji = '👏';
-                message = 'Great job! You have a strong understanding!';
-            } else if (studyResults.percentage >= 70) {
-                emoji = '👍';
-                message = 'Good work! Keep studying to improve!';
-            } else if (studyResults.percentage >= 60) {
-                emoji = '📚';
-                message = 'You\'re getting there! Review the material and try again!';
-            } else {
-                emoji = '💪';
-                message = 'Keep studying! Practice makes perfect!';
-            }
-
-            studyTab.innerHTML = `
-                <div class="final-score">
-                    <h2>🎉 Study Session Complete!</h2>
-                    <div style="font-size: 2em; margin: 20px 0;">
-                        ${studyResults.final_score}/${studyResults.total_questions}
-                    </div>
-                    <div style="font-size: 1.5em; margin: 10px 0;">
-                        ${studyResults.percentage.toFixed(1)}%
-                    </div>
-                    <div style="font-size: 1.2em; margin-top: 20px;">
-                        ${emoji} ${message}
-                    </div>
-                    <div style="margin-top: 30px;">
-                        <button class="btn" onclick="restartStudySession()">🔄 Start New Study Session</button>
-                        <button class="btn btn-secondary" onclick="switchTab('browse')">📚 Browse Cards</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function restartStudySession() {
-            // Reset session state
+        function startNewStudySession() {
+            // Reset study session state
             currentStudySessionId = null;
             studySessionActive = false;
             studySessionComplete = false;
             studyResults = null;
             showingResult = false;
-            currentQuestionData = null;
-            updateStudyTabStatus();
             
-            // Reset the study interface
-            resetStudyInterface();
+            // Show setup section again
+            document.getElementById('setupSection').classList.remove('hidden');
+            document.getElementById('studySessionSection').classList.add('hidden');
+            document.getElementById('studyResultsSection').classList.add('hidden');
         }
 
-        function resetStudyInterface() {
-            // Reset the study tab to its original state
-            const studyTab = document.getElementById('studyTab');
-            studyTab.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <label for="studyNumQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
-                    <input type="number" id="studyNumQuestions" min="1" value="10" 
-                           style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
-                    <button class="btn" onclick="startStudyMode()" style="margin-left: 10px;">🎯 Start Study Session</button>
-                </div>
-                
-                <div id="studyProgressContainer" class="hidden">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="studyProgressFill"></div>
-                    </div>
-                    <div class="score" id="studyScoreDisplay">Score: 0/0</div>
-                </div>
-                
-                <div id="studyQuestionContainer" class="hidden">
-                    <div id="studyQuestionInfo" class="question-info"></div>
-                    <div id="studyQuestionText" class="question-text"></div>
-                    
-                    <div id="studyAnswerSection">
-                        <textarea id="studyAnswerInput" class="answer-input" placeholder="Type your answer here..." rows="3"></textarea>
-                        <div style="text-align: center;">
-                            <button class="btn" onclick="submitStudyAnswer()">✅ Submit Answer</button>
-                            <button class="btn btn-hint" onclick="getStudyHint()">💡 Get Hint</button>
-                            <button class="btn btn-secondary" onclick="skipStudyQuestion()">⏭️ Skip</button>
-                        </div>
-                    </div>
-                    
-                    <div id="studyHintContainer" class="hidden"></div>
-                    <div id="studyResultContainer" class="hidden"></div>
-                    
-                    <div id="studyNextQuestionSection" class="hidden" style="text-align: center; margin-top: 20px;">
-                        <button class="btn" onclick="loadNextQuestion('study')">➡️ Next Question</button>
-                    </div>
-                </div>
-            `;
-            
-            // Set the number of questions to match available flashcards
-            if (currentFlashcards && currentFlashcards.length > 0) {
-                const studyInput = document.getElementById('studyNumQuestions');
-                if (studyInput) {
-                    studyInput.max = currentFlashcards.length;
-                    studyInput.value = Math.min(10, currentFlashcards.length);
-                }
+        function endStudySession() {
+            if (confirm('Are you sure you want to end this study session?')) {
+                // Show results section if we have results, otherwise go back to setup
+                document.getElementById('studySessionSection').classList.add('hidden');
+                document.getElementById('setupSection').classList.remove('hidden');
             }
         }
 
-        function resetStudyMode() {
-            restartStudySession();
+        // Recreate session function for when session expires
+        async function recreateSessionIfNeeded() {
+            if (!currentFlashcards || currentFlashcards.length === 0) {
+                return false;
+            }
+            
+            try {
+                // Try to recreate session with current flashcards
+                const formData = new FormData();
+                const flashcardsBlob = new Blob([JSON.stringify(currentFlashcards)], { type: 'application/json' });
+                formData.append('file', flashcardsBlob, 'flashcards.json');
+                
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    currentSessionId = result.session_id;
+                    return true;
+                }
+            } catch (error) {
+                console.error('Failed to recreate session:', error);
+            }
+            return false;
         }
 
         function startOver() {
             location.reload();
         }
 
-        // Flashcard browsing functionality
-        let currentCardIndex = 0;
+        // Flashcard browsing functionality  
         let isCardFlipped = false;
+        
+        function loadFilters() {
+            if (!currentFlashcards || currentFlashcards.length === 0) return;
+            
+            // Show filters section
+            const filtersSection = document.getElementById('filtersSection');
+            if (filtersSection) {
+                filtersSection.classList.remove('hidden');
+            }
+            
+            // Extract unique categories, difficulties, and types
+            const categories = [...new Set(currentFlashcards.map(card => card.category || 'General'))];
+            const difficulties = [...new Set(currentFlashcards.map(card => card.difficulty || 'Medium'))];
+            const types = [...new Set(currentFlashcards.map(card => card.type || 'question_answer'))];
+            
+            // Populate category filter
+            const categoryFilter = document.getElementById('categoryFilter');
+            if (categoryFilter) {
+                categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+                categories.forEach(category => {
+                    categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+                });
+            }
+            
+            // Populate difficulty filter
+            const difficultyFilter = document.getElementById('difficultyFilter');
+            if (difficultyFilter) {
+                difficultyFilter.innerHTML = '<option value="all">All Difficulties</option>';
+                difficulties.forEach(difficulty => {
+                    difficultyFilter.innerHTML += `<option value="${difficulty}">${difficulty}</option>`;
+                });
+            }
+            
+            // Populate type filter
+            const typeFilter = document.getElementById('typeFilter');
+            if (typeFilter) {
+                typeFilter.innerHTML = '<option value="all">All Types</option>';
+                types.forEach(type => {
+                    const displayName = type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    typeFilter.innerHTML += `<option value="${type}">${displayName}</option>`;
+                });
+            }
+            
+            // Apply initial filters
+            applyFilters();
+        }
+        
+        function applyFilters() {
+            if (!currentFlashcards || currentFlashcards.length === 0) return;
+            
+            const categoryFilter = document.getElementById('categoryFilter');
+            const difficultyFilter = document.getElementById('difficultyFilter');
+            const typeFilter = document.getElementById('typeFilter');
+            
+            if (!categoryFilter || !difficultyFilter || !typeFilter) return;
+            
+            filteredFlashcards = currentFlashcards.filter(card => {
+                const categoryMatch = categoryFilter.value === 'all' || (card.category || 'General') === categoryFilter.value;
+                const difficultyMatch = difficultyFilter.value === 'all' || (card.difficulty || 'Medium') === difficultyFilter.value;
+                const typeMatch = typeFilter.value === 'all' || (card.type || 'question_answer') === typeFilter.value;
+                
+                return categoryMatch && difficultyMatch && typeMatch;
+            });
+            
+            // Update filter results display
+            const filterResults = document.getElementById('filterResults');
+            if (filterResults) {
+                filterResults.textContent = `Showing ${filteredFlashcards.length} of ${currentFlashcards.length} flashcards`;
+            }
+            
+            // Reset to first card and update display
+            currentCardIndex = 0;
+            updateFlashcard();
+        }
         
         function showFlashcardsView() {
             if (!currentFlashcards || currentFlashcards.length === 0) {
@@ -1975,74 +2044,34 @@
                 return;
             }
             
-            showSection('flashcardsViewSection');
+            showTab('flashcards');
             currentCardIndex = 0;
             isCardFlipped = false;
-            updateStudyTabStatus();
-            
-            // Restore the appropriate tab based on session state
-            if (studySessionActive || studySessionComplete) {
-                switchTab('study');
-            } else {
-                switchTab('browse');
-            }
             
             updateFlashcard();
         }
 
-        function switchTab(tabName) {
-            // Update tab buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
-
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                content.style.display = 'none';
-            });
-            
-            if (tabName === 'browse') {
-                document.getElementById('browseTab').classList.add('active');
-                document.getElementById('browseTab').style.display = 'block';
-                updateFlashcard();
-            } else if (tabName === 'study') {
-                document.getElementById('studyTab').classList.add('active');
-                document.getElementById('studyTab').style.display = 'block';
-                
-                // Restore study session state if active
-                if (studySessionComplete && studyResults) {
-                    displayStudyResults();
-                } else if (studySessionActive && currentStudySessionId) {
-                    // Show the active study session
-                    document.getElementById('studyProgressContainer').classList.remove('hidden');
-                    document.getElementById('studyQuestionContainer').classList.remove('hidden');
-                    
-                    // If we have a current question, display it
-                    if (currentQuestionData) {
-                        displayQuestion(currentQuestionData, 'study');
-                    }
-                } else {
-                    // Show the initial study setup
-                    resetStudyInterface();
-                }
-                
-                // Set the number of questions to match available flashcards
-                if (currentFlashcards && currentFlashcards.length > 0) {
-                    const studyInput = document.getElementById('studyNumQuestions');
-                    if (studyInput) {
-                        studyInput.max = currentFlashcards.length;
-                        studyInput.value = Math.min(10, currentFlashcards.length);
-                    }
-                }
-            }
-        }
-
         function updateFlashcard() {
-            if (!currentFlashcards || currentFlashcards.length === 0) return;
+            const cardsToUse = filteredFlashcards.length > 0 ? filteredFlashcards : currentFlashcards;
             
-            const card = currentFlashcards[currentCardIndex];
+            if (!cardsToUse || cardsToUse.length === 0) {
+                // Show message when no flashcards available
+                const cardQuestion = document.getElementById('cardQuestion');
+                const cardAnswer = document.getElementById('cardAnswer');
+                const cardCounter = document.getElementById('cardCounter');
+                
+                if (cardQuestion) cardQuestion.textContent = 'Generate flashcards first to browse them';
+                if (cardAnswer) cardAnswer.textContent = 'Answer will appear here';
+                if (cardCounter) cardCounter.textContent = '0 / 0';
+                return;
+            }
+            
+            // Ensure currentCardIndex is within bounds
+            if (currentCardIndex >= cardsToUse.length) {
+                currentCardIndex = 0;
+            }
+            
+            const card = cardsToUse[currentCardIndex];
             const flashcard = document.getElementById('currentFlashcard');
             const cardQuestion = document.getElementById('cardQuestion');
             const cardAnswer = document.getElementById('cardAnswer');
@@ -2051,32 +2080,40 @@
 
             // Reset flip state
             isCardFlipped = false;
-            flashcard.classList.remove('flipped');
+            if (flashcard) {
+                flashcard.classList.remove('flipped');
+            }
 
             // Update content based on card type
             if (card.type === 'question_answer') {
-                cardType.textContent = 'Question';
-                cardQuestion.textContent = card.question;
-                cardAnswer.textContent = card.answer;
+                if (cardType) cardType.textContent = 'Question';
+                if (cardQuestion) cardQuestion.textContent = card.question;
+                if (cardAnswer) cardAnswer.textContent = card.answer;
             } else if (card.type === 'vocabulary') {
-                cardType.textContent = 'Term';
-                cardQuestion.textContent = card.term;
-                cardAnswer.textContent = card.definition;
+                if (cardType) cardType.textContent = 'Term';
+                if (cardQuestion) cardQuestion.textContent = card.term;
+                if (cardAnswer) cardAnswer.textContent = card.definition;
             } else if (card.type === 'fact') {
-                cardType.textContent = 'Fact';
-                cardQuestion.textContent = card.prompt;
-                cardAnswer.textContent = card.content;
+                if (cardType) cardType.textContent = 'Fact';
+                if (cardQuestion) cardQuestion.textContent = card.prompt;
+                if (cardAnswer) cardAnswer.textContent = card.content;
             }
 
             // Update counter
-            cardCounter.textContent = `${currentCardIndex + 1} / ${currentFlashcards.length}`;
+            if (cardCounter) {
+                cardCounter.textContent = `${currentCardIndex + 1} / ${cardsToUse.length}`;
+            }
 
             // Update navigation buttons
-            document.getElementById('prevBtn').disabled = currentCardIndex === 0;
-            document.getElementById('nextBtn').disabled = currentCardIndex === currentFlashcards.length - 1;
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (prevBtn) prevBtn.disabled = currentCardIndex === 0;
+            if (nextBtn) nextBtn.disabled = currentCardIndex === cardsToUse.length - 1;
         }
 
         function previousCard() {
+            const cardsToUse = filteredFlashcards.length > 0 ? filteredFlashcards : currentFlashcards;
             if (currentCardIndex > 0) {
                 currentCardIndex--;
                 updateFlashcard();
@@ -2084,7 +2121,8 @@
         }
 
         function nextCard() {
-            if (currentCardIndex < currentFlashcards.length - 1) {
+            const cardsToUse = filteredFlashcards.length > 0 ? filteredFlashcards : currentFlashcards;
+            if (currentCardIndex < cardsToUse.length - 1) {
                 currentCardIndex++;
                 updateFlashcard();
             }
@@ -2278,41 +2316,6 @@
             }
         }
 
-        // Allow Enter key to submit answer
-        document.getElementById('answerInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitAnswer();
-            }
-        });
-
-        // Add Enter key support for study mode answer input (will be added dynamically)
-        document.addEventListener('keypress', (e) => {
-            if (e.target.id === 'studyAnswerInput' && e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitStudyAnswer();
-            }
-        });
-
-        function updateStudyTabStatus() {
-            const studyTabButton = document.getElementById('studyTabButton');
-            if (!studyTabButton) return;
-            
-            if (studySessionComplete) {
-                studyTabButton.innerHTML = '🎯 Study Mode ✅';
-                studyTabButton.style.background = '#c6f6d5';
-                studyTabButton.style.color = '#22543d';
-            } else if (studySessionActive) {
-                studyTabButton.innerHTML = '🎯 Study Mode 🔄';
-                studyTabButton.style.background = '#fef5e7';
-                studyTabButton.style.color = '#744210';
-            } else {
-                studyTabButton.innerHTML = '🎯 Study Mode';
-                studyTabButton.style.background = '';
-                studyTabButton.style.color = '';
-            }
-        }
-
         // Function to recreate session if it was lost (e.g., due to server restart)
         async function recreateSessionIfNeeded() {
             if (!currentFlashcards || currentFlashcards.length === 0) {
@@ -2350,17 +2353,17 @@
             const sessionRestored = await recreateSessionIfNeeded();
             if (sessionRestored) {
                 alert('Your previous session has been restored. You can continue studying now.');
-                showFlashcardsView();
-                switchTab('study');
+                showTab('study');
             } else {
-                // No session to restore, show upload section
-                showSection('uploadSection');
+                // No session to restore, keep showing generate tab
+                showTab('generate');
             }
         });
 
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
+        // PWA Initialization Function
+        function initializePWA() {
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/sw.js')
                     .then((registration) => {
                         console.log('✅ SW registered: ', registration);
@@ -2368,18 +2371,27 @@
                     .catch((registrationError) => {
                         console.log('❌ SW registration failed: ', registrationError);
                     });
+            }
+            
+            // PWA Install Prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                console.log('📱 PWA install prompt available');
+                e.preventDefault();
+                deferredPrompt = e;
+                showInstallPrompt();
+            });
+            
+            // Handle successful app installation
+            window.addEventListener('appinstalled', (evt) => {
+                console.log('🎉 App was installed successfully');
+                const installBtn = document.getElementById('installBtn');
+                if (installBtn) {
+                    installBtn.remove();
+                }
             });
         }
 
-        // PWA Install Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('📱 PWA install prompt available');
-            e.preventDefault();
-            deferredPrompt = e;
-            showInstallPrompt();
-        });
-
+        // PWA Install Prompt and related functions
         function showInstallPrompt() {
             // Create install button if it doesn't exist
             if (!document.getElementById('installBtn')) {
@@ -2424,15 +2436,6 @@
             }
         }
 
-        // Handle successful app installation
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('🎉 App was installed successfully');
-            const installBtn = document.getElementById('installBtn');
-            if (installBtn) {
-                installBtn.remove();
-            }
-        });
-
         // Tab Navigation Functions
         function showTab(tabName) {
             // Hide all tab contents
@@ -2446,81 +2449,26 @@
             });
             
             // Show selected tab
-            document.getElementById(tabName + 'Tab').classList.add('active');
+            const targetTab = document.getElementById(tabName + 'Tab');
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
             
-            // Add active class to clicked button
-            event.target.classList.add('active');
+            // Add active class to the correct tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(tabName.toLowerCase()) ||
+                    (tabName === 'upload' && btn.textContent.includes('Upload')) ||
+                    (tabName === 'study' && btn.textContent.includes('Study')) ||
+                    (tabName === 'browse' && btn.textContent.includes('Browse'))) {
+                    btn.classList.add('active');
+                }
+            });
             
             // Auto-switch to study tab if setup is complete
             if (tabName === 'study' && currentFlashcards.length === 0) {
                 showTab('upload');
                 showMessage('Please upload study material first!', 'error');
                 return;
-            }
-        }
-
-        // Enhanced Study Session Functions
-        function startStudySession() {
-            const flashcardsToUse = filteredFlashcards.length > 0 ? filteredFlashcards : currentFlashcards;
-            
-            if (!flashcardsToUse || flashcardsToUse.length === 0) {
-                showMessage('No flashcards available for study!', 'error');
-                return;
-            }
-
-            const numQuestions = parseInt(document.getElementById('numQuestions').value);
-            if (numQuestions <= 0 || numQuestions > flashcardsToUse.length) {
-                showMessage(`Please enter a number between 1 and ${flashcardsToUse.length}`, 'error');
-                return;
-            }
-
-            // Start session with improved UI
-            document.getElementById('setupSection').classList.add('hidden');
-            document.getElementById('studySessionSection').classList.remove('hidden');
-            document.getElementById('totalQuestions').textContent = numQuestions;
-            
-            // Initialize session
-            fetch('/start_session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    session_id: currentSessionId,
-                    num_questions: numQuestions
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    currentStudySessionId = data.study_session_id;
-                    currentQuestionIndex = 0;
-                    correctAnswers = 0;
-                    loadNextQuestion();
-                } else {
-                    showMessage('Failed to start study session: ' + data.error, 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('Error starting study session', 'error');
-            });
-        }
-
-        function updateProgress() {
-            const progress = ((currentQuestionIndex + 1) / parseInt(document.getElementById('totalQuestions').textContent)) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('currentQuestionNum').textContent = currentQuestionIndex + 1;
-        }
-
-        function startNewStudySession() {
-            document.getElementById('studyResultsSection').classList.add('hidden');
-            document.getElementById('setupSection').classList.remove('hidden');
-            currentStudySessionId = null;
-        }
-
-        function endStudySession() {
-            if (confirm('Are you sure you want to end this study session?')) {
-                document.getElementById('studySessionSection').classList.add('hidden');
-                document.getElementById('setupSection').classList.remove('hidden');
             }
         }
 
