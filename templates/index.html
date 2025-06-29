@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
+    <!-- Disable All Caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <!-- iOS PWA Optimization -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1197,6 +1202,10 @@
     </div> <!-- Close container -->
 
     <script>
+        // Force browser to ignore cache by adding timestamp
+        console.log('🔄 Page loaded at:', new Date().toISOString());
+        console.log('🚫 All caching disabled');
+        
         let currentSessionId = null;
         let currentStudySessionId = null;
         let currentQuestionData = null;
@@ -1358,8 +1367,10 @@
         }
 
         function showSetupSection(flashcardCount) {
-            // Load filters for the flashcards
-            loadFilters();
+            console.log('showSetupSection called with flashcardCount:', flashcardCount);
+            
+            // Load filters for the study tab specifically
+            loadStudyFilters();
             
             document.getElementById('flashcardInfo').innerHTML = `
                 <div class="flashcard-stats">
@@ -1379,14 +1390,27 @@
             const studyQuestionControls = document.getElementById('studyQuestionControls');
             const studyStartButton = document.getElementById('studyStartButton');
             
+            console.log('Study UI elements:', {
+                studyFiltersSection: !!studyFiltersSection,
+                studyQuestionControls: !!studyQuestionControls,
+                studyStartButton: !!studyStartButton
+            });
+            
             if (studyFiltersSection) studyFiltersSection.classList.remove('hidden');
             if (studyQuestionControls) studyQuestionControls.style.display = '';
             if (studyStartButton) studyStartButton.style.display = '';
             
             // Show the setup section within the study tab
-            document.getElementById('setupSection').classList.remove('hidden');
+            const setupSection = document.getElementById('setupSection');
+            console.log('setupSection found:', !!setupSection);
+            
+            if (setupSection) {
+                setupSection.classList.remove('hidden');
+            }
             document.getElementById('studySessionSection').classList.add('hidden');
             document.getElementById('studyResultsSection').classList.add('hidden');
+            
+            console.log('showSetupSection completed');
         }
 
         function shuffleFlashcards() {
@@ -1405,6 +1429,27 @@
             currentCardIndex = 0;
             updateFlashcard();
             showMessage('Flashcards shuffled!', 'success');
+        }
+
+        // Utility function to force refresh and clear cache
+        function forceRefresh() {
+            console.log('🔄 Force refreshing page and clearing cache...');
+            
+            // Clear all possible caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Force reload with cache bypass
+            window.location.reload(true);
         }
 
         // Utility function to safely get elements
@@ -1429,6 +1474,14 @@
 
         // Initialize event listeners when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
+            // Add keyboard shortcut for force refresh (Ctrl+Shift+R or Cmd+Shift+R)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'R') {
+                    e.preventDefault();
+                    forceRefresh();
+                }
+            });
+            
             // Initialize upload functionality
             if (uploadArea && fileInput) {
                 uploadArea.addEventListener('click', () => fileInput.click());
@@ -2098,6 +2151,67 @@
             location.reload();
         }
 
+        // Study-specific filter functions
+        function loadStudyFilters() {
+            if (!currentFlashcards || currentFlashcards.length === 0) return;
+            
+            console.log('Loading study filters for', currentFlashcards.length, 'flashcards');
+            
+            // Extract unique categories, difficulties, and types
+            const categories = [...new Set(currentFlashcards.map(card => card.category || 'General'))];
+            const difficulties = [...new Set(currentFlashcards.map(card => card.difficulty || 'Medium'))];
+            const types = [...new Set(currentFlashcards.map(card => card.type || 'question_answer'))];
+            
+            // Populate study category filter
+            const studyCategoryFilter = document.getElementById('studyCategoryFilter');
+            if (studyCategoryFilter) {
+                studyCategoryFilter.innerHTML = '<option value="all">All Categories</option>';
+                categories.forEach(category => {
+                    studyCategoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+                });
+                console.log('Populated study category filter with', categories.length, 'categories');
+            }
+            
+            // Populate study difficulty filter
+            const studyDifficultyFilter = document.getElementById('studyDifficultyFilter');
+            if (studyDifficultyFilter) {
+                studyDifficultyFilter.innerHTML = '<option value="all">All Difficulties</option>';
+                difficulties.forEach(difficulty => {
+                    studyDifficultyFilter.innerHTML += `<option value="${difficulty}">${difficulty}</option>`;
+                });
+                console.log('Populated study difficulty filter with', difficulties.length, 'difficulties');
+            }
+            
+            // Populate study type filter
+            const studyTypeFilter = document.getElementById('studyTypeFilter');
+            if (studyTypeFilter) {
+                studyTypeFilter.innerHTML = '<option value="all">All Types</option>';
+                types.forEach(type => {
+                    const displayName = type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    studyTypeFilter.innerHTML += `<option value="${type}">${displayName}</option>`;
+                });
+                console.log('Populated study type filter with', types.length, 'types');
+            }
+            
+            // Update study filter results
+            const studyFilterResults = document.getElementById('studyFilterResults');
+            if (studyFilterResults) {
+                studyFilterResults.textContent = `Ready to study all ${currentFlashcards.length} flashcards`;
+            }
+        }
+
+        function applyStudyFilters() {
+            // For study tab, we don't actually filter the flashcards used in the session
+            // This is just for display purposes in the filter section
+            // The actual study session always uses the full currentFlashcards array
+            console.log('Study filters changed - but study sessions always use all flashcards');
+            
+            const studyFilterResults = document.getElementById('studyFilterResults');
+            if (studyFilterResults) {
+                studyFilterResults.textContent = `Study sessions always use all ${currentFlashcards.length} flashcards`;
+            }
+        }
+
         // Flashcard browsing functionality  
         let isCardFlipped = false;
         
@@ -2499,45 +2613,17 @@
 
         // PWA Initialization Function
         function initializePWA() {
-            // Service Worker Registration
+            // Service Worker Registration DISABLED to prevent caching
+            console.log('🚫 Service Worker disabled - no caching will occur');
+            
+            // Unregister any existing service workers
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('✅ SW registered: ', registration);
-                        
-                        // Listen for service worker updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            if (newWorker) {
-                                newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        // New update available
-                                        showMessage('🔄 App update available! Refreshing...', 'info');
-                                        setTimeout(() => {
-                                            window.location.reload();
-                                        }, 2000);
-                                    }
-                                });
-                            }
-                        });
-                    })
-                    .catch((registrationError) => {
-                        console.log('❌ SW registration failed: ', registrationError);
-                    });
-                
-                // Listen for messages from service worker
-                navigator.serviceWorker.addEventListener('message', (event) => {
-                    if (event.data && event.data.type === 'APP_UPDATED') {
-                        showMessage('✨ App updated successfully!', 'success');
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        console.log('🗑️ Unregistered service worker:', registration);
                     }
                 });
-                
-                // Register for background sync if available
-                if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
-                    navigator.serviceWorker.ready.then((registration) => {
-                        registration.sync.register('background-sync');
-                    });
-                }
             }
             
             // PWA Install Prompt
@@ -2600,42 +2686,6 @@
                 if (installBtn) {
                     installBtn.remove();
                 }
-            }
-        }
-
-        // Tab Navigation Functions
-        function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            const targetTab = document.getElementById(tabName + 'Tab');
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // Add active class to the correct tab button
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.textContent.toLowerCase().includes(tabName.toLowerCase()) ||
-                    (tabName === 'upload' && btn.textContent.includes('Upload')) ||
-                    (tabName === 'study' && btn.textContent.includes('Study')) ||
-                    (tabName === 'browse' && btn.textContent.includes('Browse'))) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // Auto-switch to study tab if setup is complete
-            if (tabName === 'study' && currentFlashcards.length === 0) {
-                showTab('upload');
-                showMessage('Please upload study material first!', 'error');
-                return;
             }
         }
 
