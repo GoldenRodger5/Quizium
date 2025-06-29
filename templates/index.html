@@ -1115,12 +1115,12 @@
                     <div id="studyFilterResults" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
                 </div>
                 
-                <div style="text-align: center; margin: 20px 0;">
+                <div id="studyQuestionControls" style="text-align: center; margin: 20px 0;">
                     <label for="numQuestions" style="display: block; margin-bottom: 10px; font-weight: bold;">How many questions do you want to answer?</label>
                     <input type="number" id="numQuestions" min="1" value="10" 
                            style="padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; width: 100px; text-align: center;">
                 </div>
-                <div style="text-align: center;">
+                <div id="studyStartButton" style="text-align: center;">
                     <button class="btn" onclick="startStudySession()">Start Study Session</button>
                 </div>
             </div>
@@ -1296,8 +1296,39 @@
             }
             
             // Special handling for study tab
-            if (tabName === 'study' && currentFlashcards && currentFlashcards.length > 0) {
-                showSetupSection(currentFlashcards.length);
+            if (tabName === 'study') {
+                if (currentFlashcards && currentFlashcards.length > 0) {
+                    showSetupSection(currentFlashcards.length);
+                } else {
+                    // Show message when no flashcards are available
+                    const flashcardInfo = document.getElementById('flashcardInfo');
+                    if (flashcardInfo) {
+                        flashcardInfo.innerHTML = `
+                            <div style="text-align: center; padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; margin-bottom: 20px;">
+                                <span style="font-size: 24px;">📚</span><br>
+                                <strong>No flashcards available</strong><br>
+                                <span style="color: #856404;">Please generate flashcards first by uploading a file or entering a URL.</span>
+                            </div>
+                        `;
+                    }
+                    
+                    // Hide study controls when no flashcards
+                    const studyFiltersSection = document.getElementById('studyFiltersSection');
+                    const studyQuestionControls = document.getElementById('studyQuestionControls');
+                    const studyStartButton = document.getElementById('studyStartButton');
+                    
+                    if (studyFiltersSection) studyFiltersSection.classList.add('hidden');
+                    if (studyQuestionControls) studyQuestionControls.style.display = 'none';
+                    if (studyStartButton) studyStartButton.style.display = 'none';
+                    
+                    // Show setup section but hide session sections
+                    const setupSection = document.getElementById('setupSection');
+                    if (setupSection) {
+                        setupSection.classList.remove('hidden');
+                    }
+                    document.getElementById('studySessionSection').classList.add('hidden');
+                    document.getElementById('studyResultsSection').classList.add('hidden');
+                }
             }
         }
 
@@ -1337,10 +1368,20 @@
                 </div>
             `;
             
-            // Update max questions
+            // Update max questions - this should always be based on the full set of flashcards,
+            // not any filtered subset. Study sessions use all available flashcards.
             const numQuestionsInput = document.getElementById('numQuestions');
             numQuestionsInput.max = flashcardCount;
             numQuestionsInput.value = Math.min(10, flashcardCount);
+            
+            // Show study controls when flashcards are available
+            const studyFiltersSection = document.getElementById('studyFiltersSection');
+            const studyQuestionControls = document.getElementById('studyQuestionControls');
+            const studyStartButton = document.getElementById('studyStartButton');
+            
+            if (studyFiltersSection) studyFiltersSection.classList.remove('hidden');
+            if (studyQuestionControls) studyQuestionControls.style.display = '';
+            if (studyStartButton) studyStartButton.style.display = '';
             
             // Show the setup section within the study tab
             document.getElementById('setupSection').classList.remove('hidden');
@@ -1690,7 +1731,8 @@
                 </div>
             `;
             
-            // Update the study input max values
+            // Update the study input max values - always based on full flashcard count
+            // Study sessions are independent of flashcard tab filtering
             document.getElementById('numQuestions').max = flashcardCount;
             document.getElementById('numQuestions').value = Math.min(10, flashcardCount);
             
@@ -1706,7 +1748,9 @@
 
         // Study mode functions for the study tab
         async function startStudySession() {
-            // Direct to study session functionality
+            // Study sessions always use the full set of flashcards (currentFlashcards),
+            // not the filtered flashcards from the flashcard tab. This ensures that
+            // filtering in the flashcard tab does not affect study sessions.
             console.log('Starting study session, currentSessionId:', currentSessionId);
             
             if (!currentSessionId) {
@@ -2726,11 +2770,9 @@
                 filteredFlashcards = data.flashcards;
                 updateFilterResults();
                 
-                // Update the max number of questions
-                const maxQuestions = filteredFlashcards.length;
-                const numQuestionsInput = document.getElementById('numQuestions');
-                numQuestionsInput.max = maxQuestions;
-                numQuestionsInput.value = Math.min(10, maxQuestions);
+                // Study tab should always use the full set of flashcards, not filtered ones
+                // The numQuestions input should be based on currentFlashcards.length, not filteredFlashcards.length
+                // This ensures that filtering in the flashcard tab does not affect the study session
                 
             } catch (error) {
                 console.error('Error applying filters:', error);
