@@ -1475,18 +1475,29 @@
                     studyResults = null;
                     showingResult = false;
                     
-                    showUploadSuccess(result);
-                    showTab('flashcards'); // Switch to flashcards tab after successful generation
+                    // Hide loading section first
+                    document.getElementById('loadingSection').classList.add('hidden');
                     
-                    // Automatically refresh the flashcard view
-                    if (currentFlashcards && currentFlashcards.length > 0) {
-                        loadFilters();
-                        updateFlashcard();
-                    }
+                    showUploadSuccess(result);
+                    
+                    // Small delay to ensure DOM updates, then switch to flashcards tab
+                    setTimeout(() => {
+                        showTab('flashcards'); // Switch to flashcards tab after successful generation
+                        
+                        // Automatically refresh the flashcard view
+                        if (currentFlashcards && currentFlashcards.length > 0) {
+                            loadFilters();
+                            updateFlashcard();
+                        }
+                    }, 100);
                 } else {
+                    // Hide loading section on error too
+                    document.getElementById('loadingSection').classList.add('hidden');
                     showUploadError(result.error);
                 }
             } catch (error) {
+                // Hide loading section on exception
+                document.getElementById('loadingSection').classList.add('hidden');
                 showUploadError('Failed to upload file: ' + error.message);
             } finally {
                 // Re-enable file input and reset its value
@@ -1503,9 +1514,7 @@
         }
 
         function showUploadSuccess(result) {
-            // Hide loading section
-            document.getElementById('loadingSection').classList.add('hidden');
-            
+            // Loading section is already hidden in the main flow
             const uploadResult = document.getElementById('uploadResult');
             uploadResult.innerHTML = `
                 <div class="result correct">
@@ -1516,9 +1525,7 @@
         }
 
         function showUploadError(error) {
-            // Hide loading section
-            document.getElementById('loadingSection').classList.add('hidden');
-            
+            // Loading section is already hidden in the main flow
             showSection('uploadSection');
             const uploadResult = document.getElementById('uploadResult');
             uploadResult.innerHTML = `
@@ -1614,13 +1621,17 @@
                             ✅ Successfully generated ${result.flashcards.length} flashcards from URL!
                         </div>
                     `;
-                    showTab('flashcards'); // Switch to flashcards tab after successful generation
                     
-                    // Automatically refresh the flashcard view
-                    if (currentFlashcards && currentFlashcards.length > 0) {
-                        loadFilters();
-                        updateFlashcard();
-                    }
+                    // Small delay to ensure DOM updates, then switch to flashcards tab
+                    setTimeout(() => {
+                        showTab('flashcards'); // Switch to flashcards tab after successful generation
+                        
+                        // Automatically refresh the flashcard view
+                        if (currentFlashcards && currentFlashcards.length > 0) {
+                            loadFilters();
+                            updateFlashcard();
+                        }
+                    }, 100);
                 } else {
                     // More detailed error handling
                     let errorMessage = result.detail || result.error || result.message || `Server error (${response.status})`;
