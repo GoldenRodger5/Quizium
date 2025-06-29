@@ -1300,6 +1300,7 @@
             
             // Special handling for flashcards tab
             if (tabName === 'flashcards' && currentFlashcards && currentFlashcards.length > 0) {
+                currentCardIndex = 0; // Reset to first card when switching to flashcards tab
                 loadFilters();
                 updateFlashcard();
             }
@@ -1580,6 +1581,7 @@
                         
                         // Automatically refresh the flashcard view
                         if (currentFlashcards && currentFlashcards.length > 0) {
+                            currentCardIndex = 0; // Reset to first card
                             loadFilters();
                             updateFlashcard();
                         }
@@ -1722,6 +1724,7 @@
                         
                         // Automatically refresh the flashcard view
                         if (currentFlashcards && currentFlashcards.length > 0) {
+                            currentCardIndex = 0; // Reset to first card
                             loadFilters();
                             updateFlashcard();
                         }
@@ -2257,7 +2260,7 @@
                 });
             }
             
-            // Apply initial filters
+            // Apply initial filters and update display automatically
             applyFilters();
         }
         
@@ -2284,7 +2287,7 @@
                 filterResults.textContent = `Showing ${filteredFlashcards.length} of ${currentFlashcards.length} flashcards`;
             }
             
-            // Reset to first card and update display
+            // Reset to first card and update display automatically
             currentCardIndex = 0;
             updateFlashcard();
         }
